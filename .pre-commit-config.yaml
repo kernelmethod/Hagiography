@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/pycqa/flake8
+    rev: '7.0.0' # https://github.com/pycqa/flake8/tags
+    hooks:
+      - id: flake8
+
