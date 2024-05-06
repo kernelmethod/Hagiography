@@ -2,10 +2,14 @@ from api.views.core import BaseAPIView, ExpectsJSONMixin
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
 
 class LoginView(ExpectsJSONMixin, BaseAPIView):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     @method_decorator(ensure_csrf_cookie)
     def post(self, request):

@@ -5,7 +5,7 @@ from django.test import Client, TestCase
 
 class BaseTestCase(TestCase):
     def setUp(self):
-        self.client = Client()
+        self.client = Client(enforce_csrf_checks=True)
 
         # Create a new user
         user = User(email="user@example.org", username="user")
