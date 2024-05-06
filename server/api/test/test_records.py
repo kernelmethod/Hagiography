@@ -4,8 +4,8 @@ from datetime import datetime, timedelta, timezone
 
 class ListRecordsTestCase(BaseTestCase):
 
-    async def test_list_records(self):
-        response = await self.client.get("/api/records/list")
+    def test_list_records(self):
+        response = self.client.get("/api/records/list")
         self.assertEqual(response.status_code, 200)
         records = response.json()["records"]
         self.assertEqual(len(records), 1)

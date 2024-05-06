@@ -1,11 +1,11 @@
 from api.models import GameRecord, User
 from api.utils import Tile
-from django.test import AsyncClient, TestCase
+from django.test import Client, TestCase
 
 
 class BaseTestCase(TestCase):
     def setUp(self):
-        self.client = AsyncClient()
+        self.client = Client()
 
         # Create a new user
         user = User(email="user@example.org", username="user")
