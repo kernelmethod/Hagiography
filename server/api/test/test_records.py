@@ -1,28 +1,8 @@
-from api.models import GameRecord
-from api.utils import Tile
+from api.test.utils import BaseTestCase
 from datetime import datetime, timedelta, timezone
-from django.test import AsyncClient, TestCase
 
 
-class ListRecordsTestCase(TestCase):
-    def setUp(self):
-        self.client = AsyncClient()
-
-        # Pre-populate database
-        tile = Tile(
-            path="Creatures/sw_trash_monk.bmp",
-            render_string="",
-            color_string="y",
-            detail_color="r",
-        )
-
-        GameRecord(
-            game_mode="Classic",
-            character_name="{{c|Resheph}}",
-            tile=str(tile),
-            score=12345,
-            turns=67890,
-        ).save()
+class ListRecordsTestCase(BaseTestCase):
 
     async def test_list_records(self):
         response = await self.client.get("/api/records/list")

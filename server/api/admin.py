@@ -1,3 +1,6 @@
-from django.contrib import admin  # noqa: F401
+from api import models
+from django.contrib import admin
 
-# Register your models here.
+
+admin.site.register(models.GameRecord)
+admin.site.register(models.User)

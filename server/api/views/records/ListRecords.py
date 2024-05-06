@@ -1,9 +1,9 @@
 from django.http import JsonResponse
-from django.views import View
+from api.views.core import BaseAPIView
 from api import models  # noqa: F401
 
 
-class ListRecords(View):
+class ListRecords(BaseAPIView):
     async def get(self, request, *args, **kwargs):
         records = models.GameRecord.objects.order_by("-created")[:10]
 
