@@ -15,7 +15,11 @@
     const id = urlParams.get('id');
 
     const response = await fetch(endpoint + "/" + id)
-      .then(response => response.json())
+      .then(response => {
+        if (response.status != 200)
+          throw new Error("unable to retrieve record");
+        return response.json();
+      })
       .then(response => {
         record = response;
       })
@@ -45,7 +49,7 @@
   </Spinner>
 </div>
 {:else if error !== null}
-<h1 class="text-error">Error</h1>
+<h1 class="text-error">{error}</h1>
 {:else}
 <div class="headline">
   <GameTileFromString --height="calc(6*var(--base-font-size))" spec="{record.tile}" />
