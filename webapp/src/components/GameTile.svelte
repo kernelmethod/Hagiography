@@ -12,46 +12,46 @@
   export let hflip = false;
   export let vflip = false;
 
-	onMount(() => {
+  onMount(() => {
     const img = new Image();
     img.src = tileURL;
 
-		const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
 
     if (tileColor in COLORMAP) {
-        let color = COLORMAP[tileColor];
-        color = "#" + color[0].toString(16) + color[1].toString(16) + color[2].toString(16);
-        canvas.style.setProperty("background-color", color);
+      let color = COLORMAP[tileColor];
+      color = "#" + color[0].toString(16) + color[1].toString(16) + color[2].toString(16);
+      canvas.style.setProperty("background-color", color);
     }
 
     if (hflip) {
-        ctx.translate(canvas.width, 0);
-        ctx.scale(-1, 1);
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
     }
     if (vflip) {
-        ctx.translate(0, canvas.height);
-        ctx.scale(1, -1);
+      ctx.translate(0, canvas.height);
+      ctx.scale(1, -1);
     }
 
     img.onload = () => {
-        ctx.drawImage(img, 0, 0);
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
 
-        const primary = COLORMAP[colorString];
-        const secondary = COLORMAP[detailColor]; 
+      const primary = COLORMAP[colorString];
+      const secondary = COLORMAP[detailColor]; 
 
-        for (let i = 0; i < data.length; i += 4) {
-            let weight = data[i] / 255;
+      for (let i = 0; i < data.length; i += 4) {
+        let weight = data[i] / 255;
 
-            for (let j = 0; j < 3; j++) {
-                // Weighted average of color channels for primary and
-                // detail colors.
-                const pixelColor = (1 - weight) * primary[j] + weight * secondary[j];
-                data[i + j] = pixelColor;
-            }
+        for (let j = 0; j < 3; j++) {
+          // Weighted average of color channels for primary and
+          // detail colors.
+          const pixelColor = (1 - weight) * primary[j] + weight * secondary[j];
+          data[i + j] = pixelColor;
         }
-        ctx.putImageData(imageData, 0, 0);
+      }
+      ctx.putImageData(imageData, 0, 0);
     };
   });
 </script>
