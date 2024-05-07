@@ -38,6 +38,8 @@
     }
 
     header /Textures/*  >Cache-Control   "max-age=604800"
+    header /assets/*    >Cache-Control   "max-age=604800"
+
     root * /srv
     {$DEFAULT_SERVER:file_server}
 }
