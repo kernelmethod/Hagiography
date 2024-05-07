@@ -34,7 +34,12 @@ class TokenFactoryTestCase(TestCase):
             self.default_payload, expires_delta=timedelta(seconds=-5)
         )
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(TokenValidationError):
+            self.factory.validate_token(token)
+
+    def test_check_invalid_token(self):
+        token = "hello, world!"
+        with self.assertRaises(TokenValidationError):
             self.factory.validate_token(token)
 
     def test_validate_token_with_scopes(self):

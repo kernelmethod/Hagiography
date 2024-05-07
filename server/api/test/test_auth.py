@@ -1,5 +1,6 @@
 from api.auth import TokenFactory
 from api.test.utils import BaseTestCase, AuthenticatedTestCase
+from django.test import Client
 
 
 class LoginTestCase(BaseTestCase):
@@ -103,12 +104,13 @@ class ChangePasswordTestCase(BaseTestCase):
 
 class GenerateAPIKeyTestCase(AuthenticatedTestCase):
 
-    endpoint = "/api/auth/apikeys/generate"
+    generate_endpoint = "/api/auth/apikeys/generate"
+    check_endpoint = "/api/auth/apikeys/check"
 
     def test_generate_api_key(self):
         # Generate an API key, and then validate that it's correct
         response = self.client.post(
-            self.endpoint,
+            self.generate_endpoint,
             headers={"X-CSRFToken": self.csrftoken}
         )
         self.assertTrue("token" in response.json())
@@ -117,3 +119,15 @@ class GenerateAPIKeyTestCase(AuthenticatedTestCase):
         factory = TokenFactory()
 
         factory.validate_token(token, scopes=["upload"])
+
+        # Check that the API key is correct. The check endpoint should initially
+        # return an error
+        client = Client(enforce_csrf_checks=True)
+        response = client.get(self.check_endpoint)
+        self.assertEqual(response.status_code, 401)
+
+        response = client.get(
+            self.check_endpoint,
+            headers={"X-Access-Token": token}
+        )
+        self.assertEqual(response.status_code, 200)

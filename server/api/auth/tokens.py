@@ -58,7 +58,10 @@ class TokenFactory:
         return token.decode()
 
     def validate_token(self, token: str, scopes: list[str] | None = None) -> User:
-        decoded = pyseto.decode(self.key, token)
+        try:
+            decoded = pyseto.decode(self.key, token)
+        except ValueError:
+            raise TokenValidationError("invalid token")
 
         footer = TokenFooter(**json.loads(decoded.footer.decode()))
 
