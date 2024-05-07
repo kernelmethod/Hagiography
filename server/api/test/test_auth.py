@@ -1,4 +1,5 @@
-from api.test.utils import BaseTestCase
+from api.auth import TokenFactory
+from api.test.utils import BaseTestCase, AuthenticatedTestCase
 
 
 class LoginTestCase(BaseTestCase):
@@ -98,3 +99,21 @@ class ChangePasswordTestCase(BaseTestCase):
             data={"password": "swordphish2", "new_password": "swordphish3"},
         )
         self.assertEqual(response.status_code, 403)
+
+
+class GenerateAPIKeyTestCase(AuthenticatedTestCase):
+
+    endpoint = "/api/auth/apikeys/generate"
+
+    def test_generate_api_key(self):
+        # Generate an API key, and then validate that it's correct
+        response = self.client.post(
+            self.endpoint,
+            headers={"X-CSRFToken": self.csrftoken}
+        )
+        self.assertTrue("token" in response.json())
+
+        token = response.json()["token"]
+        factory = TokenFactory()
+
+        factory.validate_token(token, scopes=["upload"])

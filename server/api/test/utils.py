@@ -27,3 +27,22 @@ class BaseTestCase(TestCase):
             score=12345,
             turns=67890,
         ).save()
+
+
+class AuthenticatedTestCase(BaseTestCase):
+    """Test case variant where the client is now signed in to the
+    server."""
+
+    def setUp(self):
+        super().setUp()
+        response = self.client.post(
+            "/api/auth/login",
+            content_type="application/json",
+            data={"email": "user@example.org", "password": "swordphish"},
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.csrftoken = self.client.cookies["csrftoken"].value
+        self.client.headers = {
+            "X-CSRFToken": self.csrftoken
+        }

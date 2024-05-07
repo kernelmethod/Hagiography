@@ -22,6 +22,12 @@ class TokenFooter(BaseModel):
 
 class TokenFactory:
 
+    KNOWN_SCOPES: set[str] = {
+        "upload",
+        "test__user",
+        "test__admin"
+    }
+
     def __init__(self) -> None:
         self.key = pyseto.Key.new(version=4, purpose="local", key=settings.TOKEN_KEY)
 
@@ -35,6 +41,9 @@ class TokenFactory:
             raise ValueError(
                 "at least one of footer or expires_delta must be specified"
             )
+
+        if any(filter(lambda s: s not in self.KNOWN_SCOPES, payload.scopes)):
+            raise ValueError(f"unknown scopes in {payload.scopes}")
 
         if footer is None:
             footer = TokenFooter(expires=datetime.now(timezone.utc) + expires_delta)

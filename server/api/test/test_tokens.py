@@ -38,19 +38,19 @@ class TokenFactoryTestCase(TestCase):
             self.factory.validate_token(token)
 
     def test_validate_token_with_scopes(self):
-        payload = TokenPayload(user_id=123, epoch=456, scopes=["user"])
+        payload = TokenPayload(user_id=123, epoch=456, scopes=["test__user"])
         token = self.factory.create_token(
             payload, expires_delta=self.default_expires_delta
         )
 
         # With no scopes and the user scope, the token should be correctly validated
         self.factory.validate_token(token)
-        self.factory.validate_token(token, scopes=["user"])
+        self.factory.validate_token(token, scopes=["test__user"])
 
         # With scopes that are not included in the token's scope, an exception
         # should be raised.
         with self.assertRaises(TokenValidationError):
-            self.factory.validate_token(token, scopes=["admin"])
+            self.factory.validate_token(token, scopes=["test__admin"])
 
     def test_token_invalidation_after_password_change(self):
         token = self.factory.create_token(
