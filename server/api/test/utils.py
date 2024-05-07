@@ -30,6 +30,7 @@ class BaseTestCase(TestCase):
     def setUp(self):
         BaseTestCase.populate()
         self.client = Client(enforce_csrf_checks=True)
+        self.test_user = User.objects.filter(username="user").first()
 
 
 class AuthenticatedTestCase(BaseTestCase):

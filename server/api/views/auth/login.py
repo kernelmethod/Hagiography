@@ -32,5 +32,5 @@ class LoginView(ExpectsJSONMixin, BaseAPIView):
 
         login(request, user)
         return JsonResponse(
-            {"detail": "The username or password was invalid"}, status=200
+            {"detail": "login successful", "id": user.id, "username": user.username}, status=200
         )

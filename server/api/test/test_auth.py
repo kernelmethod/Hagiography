@@ -12,6 +12,11 @@ class LoginTestCase(BaseTestCase):
             data={"email": "user@example.org", "password": "swordphish"},
         )
         self.assertEqual(response.status_code, 200)
+        json = response.json()
+        self.assertEqual(json.pop("detail"), "login successful")
+        self.assertEqual(json.pop("username"), self.test_user.username)
+        self.assertEqual(json.pop("id"), self.test_user.id)
+        self.assertEqual(json, {})
 
         # The login view should ensure that the user has CSRF cookies
         # set so that authorized API endpoints can be CSRF-protected.
@@ -59,7 +64,7 @@ class ChangePasswordTestCase(BaseTestCase):
         response = self.client.post(
             self.endpoint,
             content_type="application/json",
-            data={"password": "swordphish", "new_password": "swordphish2"}
+            data={"password": "swordphish", "new_password": "swordphish2"},
         )
         self.assertEqual(response.status_code, 403)
 
@@ -103,7 +108,7 @@ class ChangePasswordTestCase(BaseTestCase):
             self.endpoint,
             content_type="application/json",
             headers={"X-CSRFToken": token.value},
-            data={"password": "swordphish"}
+            data={"password": "swordphish"},
         )
         self.assertEqual(response.status_code, 422)
 
@@ -111,7 +116,7 @@ class ChangePasswordTestCase(BaseTestCase):
             self.endpoint,
             content_type="application/json",
             headers={"X-CSRFToken": token.value},
-            data={"new_password": "swordphish"}
+            data={"new_password": "swordphish"},
         )
         self.assertEqual(response.status_code, 422)
 
@@ -132,8 +137,7 @@ class GenerateAPIKeyTestCase(AuthenticatedTestCase):
     def test_generate_api_key(self):
         # Generate an API key, and then validate that it's correct
         response = self.client.post(
-            self.generate_endpoint,
-            headers={"X-CSRFToken": self.csrftoken}
+            self.generate_endpoint, headers={"X-CSRFToken": self.csrftoken}
         )
         self.assertTrue("token" in response.json())
 
@@ -148,8 +152,5 @@ class GenerateAPIKeyTestCase(AuthenticatedTestCase):
         response = client.get(self.check_endpoint)
         self.assertEqual(response.status_code, 401)
 
-        response = client.get(
-            self.check_endpoint,
-            headers={"X-Access-Token": token}
-        )
+        response = client.get(self.check_endpoint, headers={"X-Access-Token": token})
         self.assertEqual(response.status_code, 200)
