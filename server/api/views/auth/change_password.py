@@ -16,20 +16,14 @@ class ChangePasswordView(LoginRequiredMixin, ExpectsJSONMixin, BaseAPIView):
     def post(self, request):
         password = request.json.get("password", None)
         if password is None:
-            return JsonResponse(
-                {"detail": "old password not supplied"}, status=422
-            )
+            return JsonResponse({"detail": "old password not supplied"}, status=422)
 
         new_password = request.json.get("new_password", None)
         if new_password is None:
-            return JsonResponse(
-                {"detail": "new password not supplied"}, status=422
-            )
+            return JsonResponse({"detail": "new password not supplied"}, status=422)
 
         if (user := authenticate(email=request.user, password=password)) is None:
-            return JsonResponse(
-                {"detail": "the old password was invalid"}, status=401
-            )
+            return JsonResponse({"detail": "the old password was invalid"}, status=401)
 
         user.set_password(new_password)
         user.save()

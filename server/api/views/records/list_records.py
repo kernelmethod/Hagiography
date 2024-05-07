@@ -3,7 +3,7 @@ from api.views.core import BaseAPIView
 from api import models  # noqa: F401
 
 
-class ListRecords(BaseAPIView):
+class ListRecordsView(BaseAPIView):
     def get(self, request, *args, **kwargs):
         records = models.GameRecord.objects.order_by("-created")[:10]
 

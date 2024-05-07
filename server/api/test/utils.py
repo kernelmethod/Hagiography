@@ -26,6 +26,7 @@ class BaseTestCase(TestCase):
             tile=str(tile),
             score=12345,
             turns=67890,
+            owner=user,
         ).save()
 
 
@@ -45,4 +46,22 @@ class AuthenticatedTestCase(BaseTestCase):
         self.csrftoken = self.client.cookies["csrftoken"].value
         self.client.headers = {
             "X-CSRFToken": self.csrftoken
+        }
+
+
+class ApiClientTestCase(AuthenticatedTestCase):
+    """Test case variant where the client has been supplied with an
+    API token."""
+
+    def setUp(self):
+        super().setUp()
+        response = self.client.post(
+            "/api/auth/apikeys/generate",
+            headers={"X-CSRFToken": self.csrftoken}
+        )
+
+        self.apitoken = response.json()["token"]
+        self.client = Client(enforce_csrf_checks=True)
+        self.client.headers = {
+            "X-Access-Token": self.apitoken
         }

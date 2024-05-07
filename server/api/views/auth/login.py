@@ -1,3 +1,4 @@
+from api import schemas
 from api.views.core import BaseAPIView, ExpectsJSONMixin
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
@@ -7,14 +8,16 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
 class LoginView(ExpectsJSONMixin, BaseAPIView):
 
+    input_model = schemas.Login
+
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
     @method_decorator(ensure_csrf_cookie)
     def post(self, request):
-        email = request.json.get("email", None)
-        password = request.json.get("password", None)
+        email = request.json.email
+        password = request.json.password
 
         if email is None or password is None:
             return JsonResponse(

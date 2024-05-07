@@ -18,9 +18,7 @@ class GenerateAPIKeyView(LoginRequiredMixin, BaseAPIView):
         factory = TokenFactory()
         expires_delta = timedelta(days=2**16)
         payload = TokenPayload(
-            user_id=request.user.id,
-            epoch=request.user.token_epoch,
-            scopes=["upload"]
+            user_id=request.user.id, epoch=request.user.token_epoch, scopes=["upload"]
         )
         token = factory.create_token(payload, expires_delta=expires_delta)
         return JsonResponse({"token": token})
