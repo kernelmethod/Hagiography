@@ -29,6 +29,28 @@ class LoginTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 422)
 
 
+class LogoutTestCase(AuthenticatedTestCase):
+
+    endpoint = "/api/auth/logout"
+
+    def test_logout(self):
+        response = self.client.get("/api/users/self")
+        self.assertEqual(response.status_code, 200)
+
+        # Logout should require CSRF token
+        response = self.client.post(self.endpoint)
+        self.assertEqual(response.status_code, 403)
+
+        response = self.client.post(
+            self.endpoint, headers={"X-CSRFToken": self.csrftoken}
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Now we should be unable to access the self endpoint
+        response = self.client.get("/api/users/self")
+        self.assertEqual(response.status_code, 403)
+
+
 class ChangePasswordTestCase(BaseTestCase):
 
     endpoint = "/api/auth/change_password"
