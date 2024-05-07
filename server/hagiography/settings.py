@@ -10,6 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
+import warnings
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +24,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-7ej($)l11b(mxr50()cklv_%@fa2w1uab5mcn33o2_^_3y#6gc"
+if (keymat := os.getenv("HAGIOGRAPHY_SECRET_KEY", None)) is None:
+    warnings.warn(
+        "HAGIOGRAPHY_SECRET_KEY environment variable has not been set. Using "
+        "an insecure secret; do not use this in production!"
+    )
+    keymat = "f80172a82e9fedab63f143b99003dd05118612ce4d8cdc2fc0d5cc063b678fc6"
+
+hkdf = lambda info: HKDF(algorithm=hashes.SHA256(), length=32, salt=b"", info=info)
+SECRET_KEY = hkdf(b"SECRET_KEY").derive(keymat.encode("utf-8"))
+TOKEN_KEY = hkdf(b"TOKEN_KEY").derive(keymat.encode("utf-8"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
