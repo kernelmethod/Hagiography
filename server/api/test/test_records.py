@@ -77,3 +77,25 @@ class CreateRecordTestCase(ApiClientTestCase):
             data=self.game_record.model_dump_json()
         )
         self.assertEqual(response.status_code, 401)
+
+
+class RetrieveRecordTestCase(BaseTestCase):
+
+    endpoint = "/api/records/id"
+
+    def test_retrieve_record(self):
+        record = GameRecord.objects.first()
+        response = self.client.get(f"{self.endpoint}/{record.id}")
+        self.assertEqual(response.status_code, 200)
+        response = response.json()
+        self.assertEqual(response.pop("game_mode"), record.game_mode)
+        self.assertEqual(response.pop("character_name"), record.character_name)
+        self.assertEqual(response.pop("tile"), record.tile)
+        self.assertTrue(response.pop("created", None) is not None)
+        self.assertEqual(response.pop("score"), record.score)
+        self.assertEqual(response.pop("turns"), record.turns)
+        self.assertEqual(response.pop("owner"), record.owner.username)
+
+    def test_retrieve_nonexistent_record(self):
+        response = self.client.get(f"{self.endpoint}/beep_beep_boop")
+        self.assertEqual(response.status_code, 404)

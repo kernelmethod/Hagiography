@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from api.views.core import BaseAPIView
-from api import models  # noqa: F401
+from api import models
 
 
 class ListRecordsView(BaseAPIView):

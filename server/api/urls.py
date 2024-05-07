@@ -8,5 +8,6 @@ urlpatterns = [
     path("auth/apikeys/check", views.auth.CheckAPIKeyView.as_view()),
     path("records/list", views.records.ListRecordsView.as_view()),
     path("records/create", views.records.CreateRecordView.as_view()),
+    path("records/id/<str:id>", views.records.RetrieveRecordView.as_view()),
     path("users/self", views.users.SelfView.as_view()),
 ]
