@@ -237,7 +237,6 @@ h1, h2, h3 {
 /* Modals */
 .modal {
     --bs-modal-zindex: 5000;
-    --bs-modal-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
 }
 
 .modal-content {
@@ -245,4 +244,8 @@ h1, h2, h3 {
     background-color: var(--bg-color);
     border: 0.5rem solid var(--qudcolor-y);
     border-radius: 0;
+}
+
+.modal-backdrop.show {
+    --bs-backdrop-opacity: 0.7;
 }
