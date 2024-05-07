@@ -1,26 +1,55 @@
 <script>
-  import GameTile from "$components/GameTile.svelte";
+  import Modal from '$components/Modal.svelte';
+  import GameTile from '$components/GameTile.svelte';
 
-  let email = "";
-  let password = "";
+  let email = '';
+  let password = '';
 
   let loginForm;
   let signupForm;
   let forgotPasswordForm;
 
-  function attemptLogin() {
-    loginForm.checkValidity();
-    loginForm.classList.add("was-validated");
+  let loginPromise = null;
+
+  async function attemptLogin() {
+    loginForm.classList.add('was-validated');
+
+    if (!loginForm.checkValidity())
+      return;
+
+    const data = JSON.stringify({
+      email: email,
+      password: password,
+    });
+
+    const settings = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    };
+
+    await fetch('/api/auth/login', settings)
+      .then(response => {
+        if (response.ok)
+          return response.json();
+
+        throw new Error("unable to login");
+      })
+      .then(response => console.log(response))
+      .catch(err => console.log(err));
   }
 
   function sendSignupLink() {
     signupForm.checkValidity();
-    signupForm.classList.add("was-validated");
+    signupForm.classList.add('was-validated');
   }
 
   function sendPasswordResetLink() {
     forgotPasswordForm.checkValidity();
-    forgotPasswordForm.classList.add("was-validated");
+    forgotPasswordForm.classList.add('was-validated');
   }
 </script>
 
@@ -87,112 +116,102 @@
 </div>
 
 <!-- Login modal -->
-<div class="modal fade" id="loginModalToggle" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="modal-title fs-5 fw-bold" id="exampleModalLabel">Login to Hagiography</span>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form bind:this={loginForm} class="needs-validation" novalidate>
-          <div class="mb-3">
-            <label for="email" class="col-form-label">Email:</label>
-            <div class="input-group has-validation">
-              <input bind:value={email} type="text" class="form-control modal-input" id="email" required>
-              <div class="invalid-feedback">
-                Please enter your email address
-              </div>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="message-text" class="col-form-label">Password:</label>
-            <div class="input-group has-validation">
-              <input bind:value={password} type="password" class="form-control modal-input" id="password" required>
-              <div class="invalid-feedback">
-                Please enter your password
-              </div>
-            </div>
-          </div>
-        </form>
+<Modal id="loginModal">
+  <span slot="modalHeader">
+    Login to Hagiography
+  </span>
 
-        <button class="btn btn-link" data-bs-target="#forgotPasswordModalToggle" data-bs-toggle="modal">
-          I forgot my password
-        </button>
-        <button class="btn btn-link" data-bs-target="#signupModalToggle" data-bs-toggle="modal">
-          Create a new account
-        </button>
+  <div slot="modalBody">
+    <form bind:this={loginForm} class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="email" class="col-form-label">Email:</label>
+        <div class="input-group has-validation">
+          <input bind:value={email} type="text" class="form-control modal-input" id="email" required>
+          <div class="invalid-feedback">
+            Please enter your email address
+          </div>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" on:click={attemptLogin}>Login</button>
+      <div class="mb-3">
+        <label for="message-text" class="col-form-label">Password:</label>
+        <div class="input-group has-validation">
+          <input bind:value={password} type="password" class="form-control modal-input" id="password" required>
+          <div class="invalid-feedback">
+            Please enter your password
+          </div>
+        </div>
       </div>
-    </div>
+    </form>
+
+    <button class="btn btn-link" data-bs-target="#forgotPasswordModalToggle" data-bs-toggle="modal">
+      I forgot my password
+    </button>
+    <button class="btn btn-link" data-bs-target="#signupModalToggle" data-bs-toggle="modal">
+      Create a new account
+    </button>
   </div>
-</div>
+
+  <div slot="modalFooter">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary" on:click={attemptLogin}>Login</button>
+  </div>
+</Modal>
 
 <!-- Signup modal -->
-<div class="modal fade" id="signupModalToggle" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="modal-title fs-5 fw-bold" id="exampleModalLabel">Sign up for Hagiography</span>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form bind:this={signupForm} class="needs-validation" novalidate>
-          <div class="mb-3">
-            <label for="email" class="col-form-label">Email:</label>
-            <div class="input-group has-validation">
-              <input bind:value={email} type="text" class="form-control modal-input" id="email" required>
-              <div class="invalid-feedback">
-                Please enter your email address
-              </div>
-            </div>
+<Modal id="signupModal">
+  <span slot="modalHeader">
+    Sign up for Hagiography
+  </span>
+  <div slot="modalBody">
+    <form bind:this={signupForm} class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="email" class="col-form-label">Email:</label>
+        <div class="input-group has-validation">
+          <input bind:value={email} type="text" class="form-control modal-input" id="email" required>
+          <div class="invalid-feedback">
+            Please enter your email address
           </div>
-        </form>
+        </div>
+      </div>
+    </form>
 
-        <button class="btn btn-link" data-bs-target="#loginModalToggle" data-bs-toggle="modal">
-          Return to login
-        </button>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" on:click={sendSignupLink}>Send signup link</button>
-      </div>
-    </div>
+    <button class="btn btn-link" data-bs-target="#loginModalToggle" data-bs-toggle="modal">
+      Return to login
+    </button>
   </div>
-</div>
+
+  <div slot="modalFooter">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary" on:click={sendSignupLink}>Send signup link</button>
+  </div>
+</Modal>
 
 <!-- Forgot password modal -->
-<div class="modal fade" id="forgotPasswordModalToggle" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="modal-title fs-5 fw-bold" id="exampleModalLabel">Login to Hagiography</span>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form bind:this={forgotPasswordForm} class="needs-validation" novalidate>
-          <div class="mb-3">
-            <label for="email" class="col-form-label">Email:</label>
-            <div class="input-group has-validation">
-              <input bind:value={email} type="text" class="form-control modal-input" id="email" required>
-              <div class="invalid-feedback">
-                Please enter your email address
-              </div>
-            </div>
-          </div>
-        </form>
+<Modal id="forgotPasswordModal">
+  <span slot="modalHeader">
+    Reset password
+  </span>
 
-        <button class="btn btn-link" data-bs-target="#loginModalToggle" data-bs-toggle="modal">
-          Return to login
-        </button>
+  <div slot="modalBody">
+    <form bind:this={forgotPasswordForm} class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="email" class="col-form-label">Email:</label>
+        <div class="input-group has-validation">
+          <input bind:value={email} type="text" class="form-control modal-input" id="email" required>
+          <div class="invalid-feedback">
+            Please enter your email address
+          </div>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" on:click={sendPasswordResetLink}>Send password reset link</button>
-      </div>
-    </div>
+    </form>
+
+    <button class="btn btn-link" data-bs-target="#loginModalToggle" data-bs-toggle="modal">
+      Return to login
+    </button>
   </div>
-</div>
+
+  <div slot="modalFooter">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary" on:click={sendPasswordResetLink}>Send password reset link</button>
+  </div>
+</Modal>
