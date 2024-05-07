@@ -1,12 +1,13 @@
 import json
 import pyseto
+from api.models import User
 from datetime import datetime, timedelta, timezone
 from django.conf import settings
 from pydantic import BaseModel, Field
 
 
 class TokenValidationError(Exception):
-    ...
+    pass
 
 
 class TokenPayload(BaseModel):
@@ -28,7 +29,7 @@ class TokenFactory:
         self,
         payload: TokenPayload,
         footer: TokenFooter | None = None,
-        expires_delta: timedelta | None = None
+        expires_delta: timedelta | None = None,
     ) -> str:
         if footer is None and expires_delta is None:
             raise ValueError(
@@ -43,17 +44,11 @@ class TokenFactory:
         payload_json = payload.model_dump_json().encode("utf-8")
         footer_json = footer.model_dump_json().encode("utf-8")
 
-        token = pyseto.encode(
-            self.key,
-            payload=payload_json,
-            footer=footer_json
-        )
+        token = pyseto.encode(self.key, payload=payload_json, footer=footer_json)
 
         return token.decode()
 
-    def validate_token(
-        self, token: str, scopes: list[str] | None = None
-    ) -> TokenPayload:
+    def validate_token(self, token: str, scopes: list[str] | None = None) -> User:
         decoded = pyseto.decode(self.key, token)
 
         footer = TokenFooter(**json.loads(decoded.footer.decode()))
@@ -66,4 +61,11 @@ class TokenFactory:
             if any(filter(lambda s: s not in payload.scopes, scopes)):
                 raise TokenValidationError("insufficient permissions")
 
-        return payload
+        # Validate that the epoch is not expired
+        user = User.objects.filter(id=payload.user_id).first()
+        if user is None:
+            raise TokenValidationError("no user found with given ID")
+        if payload.epoch < user.token_epoch:
+            raise TokenValidationError("token epoch expired")
+
+        return user

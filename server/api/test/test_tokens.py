@@ -1,13 +1,18 @@
 # Tests for token issuance using TokenFactory
 
 from api.auth import TokenFactory, TokenPayload, TokenValidationError
+from api.models import User
 from datetime import timedelta
 from django.test import TestCase
 
 
 class TokenFactoryTestCase(TestCase):
     def setUp(self):
-        self.default_payload = TokenPayload(user_id=123, epoch=456)
+        user = User(email="user@example.org", username="user", id=123)
+        user.set_password("swordphish")
+        user.save()
+
+        self.default_payload = TokenPayload(user_id=user.id, epoch=user.token_epoch)
         self.default_expires_delta = timedelta(minutes=1)
         self.factory = TokenFactory()
 
@@ -19,8 +24,8 @@ class TokenFactoryTestCase(TestCase):
         self.assertTrue(isinstance(token, str))
 
         # Validate that we can decode the token correctly
-        payload_decoded = self.factory.validate_token(token)
-        self.assertEqual(self.default_payload, payload_decoded)
+        user = self.factory.validate_token(token)
+        self.assertEqual(user.email, "user@example.org")
 
     def test_create_expired_token(self):
         # Tokens that are expired should raise an exception when we attempt
@@ -46,3 +51,19 @@ class TokenFactoryTestCase(TestCase):
         # should be raised.
         with self.assertRaises(TokenValidationError):
             self.factory.validate_token(token, scopes=["admin"])
+
+    def test_token_invalidation_after_password_change(self):
+        token = self.factory.create_token(
+            self.default_payload, expires_delta=self.default_expires_delta
+        )
+
+        self.assertTrue(isinstance(token, str))
+        user = self.factory.validate_token(token)
+
+        # Token should no longer be valid once the user's password is updated
+        user.set_password("swordphish2")
+        user.save()
+
+        user = User.objects.filter(id=123).first()
+        with self.assertRaises(TokenValidationError):
+            self.factory.validate_token(token)
