@@ -14,8 +14,15 @@
   }
 
   onMount(async function () {
-    const response = await fetch(endpoint);
-    records = await response.json();
+    const response = await fetch(endpoint)
+      .then(response => response.json())
+      .then(response => {
+        records = response.records;
+      })
+      .catch(err => {
+        records = [];
+        console.log("Error retrieving records: " + err);
+      });
   });
 </script>
 
