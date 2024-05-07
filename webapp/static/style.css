@@ -113,7 +113,7 @@
     -webkit-background-size: 100% 4px;
     width: 100vw;
     height: 100vh;
-    z-index: 1000;
+    z-index: 100;
     pointer-events: none;
 }
 
@@ -125,7 +125,7 @@ body {
 
 main, footer {
     position: relative;
-    z-index: 2000;
+    z-index: 200;
 }
 
 main {
@@ -231,4 +231,16 @@ h1, h2, h3 {
 
 .text-truncate {
     white-space: nowrap;
+}
+
+/* Modals */
+.modal {
+    --bs-modal-zindex: 5000;
+}
+
+.modal-content {
+    color: var(--qudcolor-y);
+    background-color: var(--qudcolor-K);
+    border: 0.5rem solid var(--qudcolor-y);
+    border-radius: 0;
 }
