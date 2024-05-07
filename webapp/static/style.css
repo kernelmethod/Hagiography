@@ -28,6 +28,7 @@
     --console-font-family: "Source Code Pro","Courier new", Courier, Monospace !important;
     --table-highlight: #0b332a;
     --table-bg: var(--qudcolor-K);
+    --bg-color: #061c17;
 
     /*
      * Scanline animation configuration
@@ -236,11 +237,12 @@ h1, h2, h3 {
 /* Modals */
 .modal {
     --bs-modal-zindex: 5000;
+    --bs-modal-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
 }
 
 .modal-content {
     color: var(--qudcolor-y);
-    background-color: var(--qudcolor-K);
+    background-color: var(--bg-color);
     border: 0.5rem solid var(--qudcolor-y);
     border-radius: 0;
 }

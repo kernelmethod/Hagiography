@@ -1,5 +1,27 @@
 <script>
   import GameTile from "$components/GameTile.svelte";
+
+  let email = "";
+  let password = "";
+
+  let loginForm;
+  let signupForm;
+  let forgotPasswordForm;
+
+  function attemptLogin() {
+    loginForm.checkValidity();
+    loginForm.classList.add("was-validated");
+  }
+
+  function sendSignupLink() {
+    signupForm.checkValidity();
+    signupForm.classList.add("was-validated");
+  }
+
+  function sendPasswordResetLink() {
+    forgotPasswordForm.checkValidity();
+    forgotPasswordForm.classList.add("was-validated");
+  }
 </script>
 
 <style>
@@ -73,14 +95,24 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form bind:this={loginForm} class="needs-validation" novalidate>
           <div class="mb-3">
             <label for="email" class="col-form-label">Email:</label>
-            <input type="text" class="form-control modal-input" id="email">
+            <div class="input-group has-validation">
+              <input bind:value={email} type="text" class="form-control modal-input" id="email" required>
+              <div class="invalid-feedback">
+                Please enter your email address
+              </div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="message-text" class="col-form-label">Password:</label>
-            <input type="password" class="form-control modal-input" id="password">
+            <div class="input-group has-validation">
+              <input bind:value={password} type="password" class="form-control modal-input" id="password" required>
+              <div class="invalid-feedback">
+                Please enter your password
+              </div>
+            </div>
           </div>
         </form>
 
@@ -93,7 +125,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Login</button>
+        <button type="button" class="btn btn-primary" on:click={attemptLogin}>Login</button>
       </div>
     </div>
   </div>
@@ -108,10 +140,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form bind:this={signupForm} class="needs-validation" novalidate>
           <div class="mb-3">
             <label for="email" class="col-form-label">Email:</label>
-            <input type="text" class="form-control modal-input" id="email">
+            <div class="input-group has-validation">
+              <input bind:value={email} type="text" class="form-control modal-input" id="email" required>
+              <div class="invalid-feedback">
+                Please enter your email address
+              </div>
+            </div>
           </div>
         </form>
 
@@ -121,7 +158,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send signup link</button>
+        <button type="button" class="btn btn-primary" on:click={sendSignupLink}>Send signup link</button>
       </div>
     </div>
   </div>
@@ -136,10 +173,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form bind:this={forgotPasswordForm} class="needs-validation" novalidate>
           <div class="mb-3">
             <label for="email" class="col-form-label">Email:</label>
-            <input type="text" class="form-control modal-input" id="email">
+            <div class="input-group has-validation">
+              <input bind:value={email} type="text" class="form-control modal-input" id="email" required>
+              <div class="invalid-feedback">
+                Please enter your email address
+              </div>
+            </div>
           </div>
         </form>
 
@@ -149,7 +191,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send password reset link</button>
+        <button type="button" class="btn btn-primary" on:click={sendPasswordResetLink}>Send password reset link</button>
       </div>
     </div>
   </div>
