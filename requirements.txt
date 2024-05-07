@@ -1,4 +1,5 @@
 argon2-cffi==23.1.0
 Django==5.0.4
+gunicorn==22.0.0
 pydantic==2.7.1
 pyseto==1.7.8

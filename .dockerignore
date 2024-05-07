@@ -1,0 +1,11 @@
+venv/
+virtualenv/
+
+*.pyc
+*__pycache__
+*.db
+*.sqlite3
+
+webapp/.svelte-kit/
+webapp/node_modules/
+webapp/build/

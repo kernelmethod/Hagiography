@@ -1,0 +1,234 @@
+:root {
+    /*
+     * Variables related to Qud coloring
+     */
+    --qudcolor-r: #a64a2e;
+    --qudcolor-R: #d74200;
+    --qudcolor-o: #f15f22;
+    --qudcolor-O: #e99f10;
+    --qudcolor-w: #98875f;
+    --qudcolor-W: #cfc041;
+    --qudcolor-g: #009403;
+    --qudcolor-G: #00c420;
+    --qudcolor-b: #0048bd;
+    --qudcolor-B: #0096ff;
+    --qudcolor-c: #40a4b9;
+    --qudcolor-C: #77bfcf;
+    --qudcolor-m: #b154cf;
+    --qudcolor-M: #da5bd6;
+    --qudcolor-k: #0f3b3a;
+    --qudcolor-K: #155352;
+    --qudcolor-y: #b1c9c3;
+    --qudcolor-Y: #ffffff;
+
+    /*
+     * Custom site variables
+     */
+    --base-font-size: 1.5rem;
+    --console-font-family: "Source Code Pro","Courier new", Courier, Monospace !important;
+    --table-highlight: #0b332a;
+    --table-bg: var(--qudcolor-K);
+
+    /*
+     * Scanline animation configuration
+     */
+    --scanline-width: 2px;
+    --scanline-color: rgba(0, 0, 0, 0.2);
+    --scanline-opacity: 0.75;
+    --scanline-fps: 32;
+    --scanline-z-index: 3000;
+
+    /* Bootstrap variables */
+    --bs-primary: var(--qudcolor-y);
+    --bs-body-color: var(--qudcolor-y);
+    --bs-body-font-size: var(--base-font-size);
+    --bs-body-font-family: var(--console-font-family);
+    --bs-tertiary-bg-rgb: 6,28,23;
+    --bs-emphasis-color-rgb: 119,191,207;
+    --bs-primary-rgb: 193,211,214;
+    --bs-table-color: var(--qudcolor-y);
+}
+
+.navbar {
+    --bs-navbar-brand-font-size: 2rem;
+}
+
+.scanlines {
+    position: fixed;
+    background-color: black;
+}
+
+.scanlines::before, .scanlines::after {
+    display: block;
+    pointer-events: none;
+    content: '';
+    position: absolute;
+}
+
+.scanlines::before {
+    width: 100%;
+    height: var(--scanline-width);
+    z-index: calc(var(--scanline-z-index) + 1);
+    background: var(--scanline-color);
+    opacity: var(--scanline-opacity);
+    animation: scanline 6s linear infinite;
+}
+
+.scanlines::after {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: var(--scanline-z-index);
+    background: linear-gradient(to bottom, transparent 50%, var(--scanline-color) 51%);
+    background-size: 100% calc(var(--scanline-width) * 2);
+    animation: scanlines 1s steps(var(--scanline-fps)) infinite;
+}
+
+@keyframes scanline {
+    0% {
+        transform: translate3d(0,200000%,0);
+    }
+}
+
+@keyframes scanlines {
+    0% {
+        background-position: 0 50%;
+    }
+}
+
+.background-gradient {
+    background-image: radial-gradient(#163c33,#061c17);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.scanlines-static {
+    position: fixed;
+    background-image: -webkit-repeating-linear-gradient(top,transparent 0,transparent 2px,rgba(6,28,23,.2) 2px,rgba(6,28,23,.2) 4px);
+    -webkit-background-size: 100% 4px;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+main, footer {
+    position: relative;
+    z-index: 2000;
+}
+
+main {
+    min-height: 60vh;
+}
+
+footer {
+    width: 100%;
+    border-top: 2px dashed var(--qudcolor-y);
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+article {
+    padding: 2rem 2rem 0 2rem;
+}
+
+h1, h2, h3 {
+    text-decoration: underline;
+}
+
+/* Colors for Qud shaders */    
+.qudcolor-r {
+    color: var(--qudcolor-r);
+}
+
+.qudcolor-R {
+    color: var(--qudcolor-R);
+}
+
+.qudcolor-o {
+    color: var(--qudcolor-o);
+}
+
+.qudcolor-O {
+    color: var(--qudcolor-O);
+}
+
+.qudcolor-w {
+    color: var(--qudcolor-w);
+}
+
+.qudcolor-W {
+    color: var(--qudcolor-W);
+}
+
+.qudcolor-g {
+    color: var(--qudcolor-g);
+}
+
+.qudcolor-G {
+    color: var(--qudcolor-G);
+}
+
+.qudcolor-b {
+    color: var(--qudcolor-b);
+}
+
+.qudcolor-B {
+    color: var(--qudcolor-B);
+}
+
+.qudcolor-c {
+    color: var(--qudcolor-c);
+}
+
+.qudcolor-C {
+    color: var(--qudcolor-C);
+}
+
+.qudcolor-m {
+    color: var(--qudcolor-m);
+}
+
+.qudcolor-M {
+    color: var(--qudcolor-M);
+}
+
+.qudcolor-k {
+    color: var(--qudcolor-k);
+}
+
+.qudcolor-K {
+    color: var(--qudcolor-K);
+}
+
+.qudcolor-y {
+    color: var(--qudcolor-y);
+}
+
+.qudcolor-Y {
+    color: var(--qudcolor-Y);
+}
+
+/* Text styling */
+.text-center {
+    text-align: center;
+}
+
+.text-error {
+    color: red;
+}
+
+.text-truncate {
+    white-space: nowrap;
+}

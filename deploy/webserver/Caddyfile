@@ -1,0 +1,43 @@
+{
+    auto_https off
+
+    servers {
+        metrics
+    }
+}
+
+(headers) {
+	header {
+		# Disable FLoC tracking
+		Permissions-Policy interest-cohort=()
+
+		# Disable MIME type sniffing
+		X-Content-Type-Options nosniff
+
+		# Clickjacking protection
+		X-Frame-Options DENY
+
+		# Don't include referer information in plaintext requests
+		Referrer-Policy no-referrer-when-downgrade
+
+		# Remove the Server header
+		-Server
+	}
+}
+
+:80, :443 {
+    import headers
+
+    handle /api/* {
+        reverse_proxy api.local:8000
+    }
+
+    handle_path /openapi.json {
+        rewrite * /openapi.json
+        reverse_proxy api.local:8000
+    }
+
+    header /Textures/*  >Cache-Control   "max-age=604800"
+    root * /srv
+    {$DEFAULT_SERVER:file_server}
+}
