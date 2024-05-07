@@ -4,9 +4,7 @@ from django.test import Client, TestCase
 
 
 class BaseTestCase(TestCase):
-    def setUp(self):
-        self.client = Client(enforce_csrf_checks=True)
-
+    def populate():
         # Create a new user
         user = User(email="user@example.org", username="user")
         user.set_password("swordphish")
@@ -28,6 +26,10 @@ class BaseTestCase(TestCase):
             turns=67890,
             owner=user,
         ).save()
+
+    def setUp(self):
+        BaseTestCase.populate()
+        self.client = Client(enforce_csrf_checks=True)
 
 
 class AuthenticatedTestCase(BaseTestCase):
