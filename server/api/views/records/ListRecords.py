@@ -4,11 +4,11 @@ from api import models  # noqa: F401
 
 
 class ListRecords(BaseAPIView):
-    async def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         records = models.GameRecord.objects.order_by("-created")[:10]
 
         record_list = []
-        async for r in records:
+        for r in records:
             r_dict = {
                 "id": r.id,
                 "created": r.created,
