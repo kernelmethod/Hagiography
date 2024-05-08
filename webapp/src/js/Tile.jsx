@@ -1,3 +1,5 @@
+import { COLORMAP } from '$js/Color.jsx';
+
 class Tile {
     constructor(
         path,
@@ -15,6 +17,36 @@ class Tile {
         this.tileColor = tileColor;
         this.hflip = hflip;
         this.vflip = vflip;
+    }
+}
+
+class ColorString {
+    constructor(colorString) {
+        // ex. y
+        if (colorString in COLORMAP) {
+            this.fgColor = colorString;
+            this.bgColor = null;
+            return;
+        }
+
+        // ex. &y
+        let result = /^&(.)$/.exec(colorString);
+        if (result !== null) {
+            this.fgColor = result[1];
+            this.bgColor = null;
+            return;
+        }
+
+        // ex. &y^k
+        result = /^&(.)\^(.)$/.exec(colorString);
+        if (result !== null) {
+            this.fgColor = result[1];
+            this.bgColor = result[2];
+            return;
+        }
+
+        this.fgColor = null
+        this.bgColor = null;
     }
 }
 
@@ -37,5 +69,6 @@ function parseTileSpec(spec) {
 
 export {
     Tile,
-    parseTileSpec
+    ColorString,
+    parseTileSpec,
 }

@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { COLORMAP } from '$js/Color.jsx';
+  import { ColorString } from '$js/Tile.jsx';
 
   let canvas;
 
@@ -18,8 +19,13 @@
 
     const ctx = canvas.getContext('2d');
 
-    if (tileColor in COLORMAP) {
-      let color = COLORMAP[tileColor];
+    let cs = new ColorString(colorString);
+    const primary = COLORMAP[cs.fgColor];
+    const secondary = COLORMAP[detailColor];
+    const bgColorStr = (tileColor !== null && tileColor !== "") ? tileColor : cs.bgColor;
+
+    if (bgColorStr in COLORMAP) {
+      let color = COLORMAP[bgColorStr];
       color = "#" + color[0].toString(16) + color[1].toString(16) + color[2].toString(16);
       canvas.style.setProperty("background-color", color);
     }
@@ -37,9 +43,6 @@
       ctx.drawImage(img, 0, 0);
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
-
-      const primary = COLORMAP[colorString];
-      const secondary = COLORMAP[detailColor]; 
 
       for (let i = 0; i < data.length; i += 4) {
         let weight = data[i] / 255;
