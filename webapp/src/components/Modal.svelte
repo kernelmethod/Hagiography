@@ -8,14 +8,6 @@
 </script>
 
 <style>
-  .btn-link {
-    color: var(--qudcolor-y);
-  }
-
-  .modal-input {
-    color: black;
-  }
-
   .modal-dialog {
     max-width: var(--width, var(--bs-modal-width));
   }

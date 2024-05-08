@@ -5,4 +5,4 @@
   }
 </style>
 
-<img src="/assets/herododicus.png" />
+<img alt="Herododicus, a character from Caves of Qud." src="/assets/herododicus.png" />
