@@ -19,6 +19,11 @@ export default {
             handleHttpError: ({path, referrer, message}) => {
                 throw new Error(message);
             }
+        },
+        csp: {
+			directives: {
+				'script-src': ['self']
+			},
         }
     }
 };

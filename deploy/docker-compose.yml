@@ -14,7 +14,7 @@ services:
     environment:
       DEVELOPMENT: "1"
     volumes:
-      - ../webapp:/srv:rw
+      - ../webapp:/var/opt/webapp:rw
     networks:
       - internal
 

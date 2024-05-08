@@ -21,10 +21,10 @@ RUN chmod a+x /usr/local/bin/docker-entrypoint.sh
 WORKDIR "${APP_DIR}"
 COPY --chown="$USER_UID:$USER_UID" webapp/ "${APP_DIR}"
 USER "${USER_USERNAME}"
-#RUN yarn \
-#    && yarn build \
-#    && mv build/* /srv \
-#    && chown -R "${USER_UID}:${USER_UID}" /srv
+RUN yarn \
+    && yarn build \
+    && mv build/* /srv \
+    && chown -R "${USER_UID}:${USER_UID}" /srv
 
 COPY ./deploy/webserver/Caddyfile /etc/caddy/Caddyfile
 CMD [ "/usr/local/bin/docker-entrypoint.sh" ]
