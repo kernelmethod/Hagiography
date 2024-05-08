@@ -3,9 +3,7 @@
   export let spec;
 
   function parseDate(date) {
-    let d = new Date(Date.parse(date));
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toLocaleString();
+    return (new Date(Date.parse(date))).toLocaleString();
   }
 </script>
 
