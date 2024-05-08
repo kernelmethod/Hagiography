@@ -6,6 +6,7 @@
   import ColorizedText from "$components/ColorizedText.svelte";
   import Spinner from "$components/Spinner.svelte";
 
+  let waitingForRecords = true;
   let records = null;
   let listRecordsPromise = null;
   const endpoint = "/api/records/list";
@@ -18,6 +19,7 @@
     return await fetch(endpoint)
       .then(response => response.json())
       .then(response => {
+        waitingForRecords = false;
         return response.records;
       })
       .catch(err => {
@@ -56,8 +58,7 @@
     </tr>
   </thead>
   <tbody>
-    {#if listRecordsPromise !== null}
-    {#await listRecordsPromise}
+    {#if waitingForRecords}
     <!-- Records haven't been retrieved yet -->
     <tr>
       <td style="text-align: center;" colspan="5">
@@ -66,7 +67,9 @@
         </Spinner>
       </td>
     </tr>
-    {:then records}
+    {/if}
+    {#if listRecordsPromise !== null}
+    {#await listRecordsPromise then records}
     {#if records.length === 0}
     <tr>
       <td style="text-align: center;" colspan="5">

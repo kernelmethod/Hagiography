@@ -7,26 +7,27 @@
 
   const endpoint = "/api/records/id";
 
+  let waitingForRecord = true;
   let record = null;
-  let error = null;
+  let recordPromise = null;
 
-  onMount(async function () {
+  async function fetchRecord() {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
 
-    const response = await fetch(endpoint + "/" + id)
+    await fetch(endpoint + "/" + id)
       .then(response => {
         if (response.status != 200)
           throw new Error("unable to retrieve record");
         return response.json();
       })
       .then(response => {
+        waitingForRecord = false;
         record = response;
-      })
-      .catch(err => {
-        error = err;
       });
-  });
+  }
+
+  onMount(() => { recordPromise = fetchRecord(); });
 </script>
 
 <style>
@@ -42,15 +43,16 @@
   }
 </style>
 
-{#if record === null && error === null}
+{#if waitingForRecord}
 <div class="text-center">
   <Spinner --size="128px">
     Loading character data...
   </Spinner>
 </div>
-{:else if error !== null}
-<h1 class="text-error">{error}</h1>
-{:else}
+{/if}
+{#if recordPromise !== null}
+{#await recordPromise}
+{:then}
 <div class="headline">
   <GameTileFromString --height="calc(6*var(--base-font-size))" spec="{record.tile}" />
   <span style="display: inline-block; padding-left: 1rem;">
@@ -64,5 +66,7 @@
 <p><b>Score:</b> {record.score}</p>
 <p><b>Turns played:</b> {record.turns}</p>
 <p><b>Played on:</b> <DateTime spec="{record.created}" /></p>
-
+{:catch error}
+<h1 class="text-error">{error}</h1>
+{/await}
 {/if}
