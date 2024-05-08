@@ -43,30 +43,32 @@
   }
 </style>
 
-{#if waitingForRecord}
-<div class="text-center">
-  <Spinner --size="128px">
-    Loading character data...
-  </Spinner>
-</div>
-{/if}
-{#if recordPromise !== null}
-{#await recordPromise}
-{:then}
-<div class="headline">
-  <GameTileFromString --height="calc(6*var(--base-font-size))" spec="{record.tile}" />
-  <span style="display: inline-block; padding-left: 1rem;">
-    <h1>
-      <ColorizedText text="{record.character_name}" />
-    </h1>
-  </span>
-</div>
+<main>
+  {#if waitingForRecord}
+  <div class="text-center">
+    <Spinner --size="128px">
+      Loading character data...
+    </Spinner>
+  </div>
+  {/if}
+  {#if recordPromise !== null}
+  {#await recordPromise}
+  {:then}
+  <div class="headline">
+    <GameTileFromString --height="calc(6*var(--base-font-size))" spec="{record.tile}" />
+    <span style="display: inline-block; padding-left: 1rem;">
+      <h1>
+        <ColorizedText text="{record.character_name}" />
+      </h1>
+    </span>
+  </div>
 
-<p><b>Game mode:</b> {record.game_mode}</p>
-<p><b>Score:</b> {record.score}</p>
-<p><b>Turns played:</b> {record.turns}</p>
-<p><b>Played on:</b> <DateTime spec="{record.created}" /></p>
-{:catch error}
-<h1 class="text-error">{error}</h1>
-{/await}
-{/if}
+  <p><b>Game mode:</b> {record.game_mode}</p>
+  <p><b>Score:</b> {record.score}</p>
+  <p><b>Turns played:</b> {record.turns}</p>
+  <p><b>Played on:</b> <DateTime spec="{record.created}" /></p>
+  {:catch error}
+  <h1 class="text-error">{error}</h1>
+  {/await}
+  {/if}
+</main>

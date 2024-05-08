@@ -5,9 +5,7 @@
 <Navbar />
 
 <div class="container">
-  <main>
-    <slot />
-  </main>
+  <slot />
 
   <footer>
     <a href="/about">About</a>

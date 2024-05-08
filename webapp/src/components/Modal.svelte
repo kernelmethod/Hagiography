@@ -15,6 +15,10 @@
   .modal-input {
     color: black;
   }
+
+  .modal-dialog {
+    max-width: var(--width, var(--bs-modal-width));
+  }
 </style>
 
 <div bind:this={modal} class="modal fade" id="{id}Toggle" tabindex="-1" aria-labelledby="{id}Label" aria-hidden="true">

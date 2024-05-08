@@ -54,7 +54,7 @@ export function fetcher(url, settings = null) {
   if (settings === null)
     settings = {};
 
-  if (settings.headers === null)
+  if (settings.headers === undefined)
     settings.headers = {};
 
   settings.headers["X-CSRFToken"] = csrftoken;

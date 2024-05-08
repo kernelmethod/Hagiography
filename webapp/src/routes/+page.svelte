@@ -3,13 +3,15 @@
   import RecordTable from "$components/RecordTable.svelte";
 </script>
 
-<div class="text-center" style="margin-bottom: 2rem;">
-  <HeroIcon --height="128px" />
-  <h2>
-    Welcome to <b>Hagiography</b>!
-  </h2>
-</div>
+<main>
+  <div class="text-center" style="margin-bottom: 2rem;">
+    <HeroIcon --height="128px" />
+    <h2>
+      Welcome to <b>Hagiography</b>!
+    </h2>
+  </div>
 
-<p>Live and drink.</p>
+  <p>Live and drink.</p>
 
-<RecordTable />
+  <RecordTable />
+</main>
