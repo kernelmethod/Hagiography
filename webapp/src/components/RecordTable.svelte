@@ -19,12 +19,14 @@
     return await fetch(endpoint)
       .then(response => response.json())
       .then(response => {
-        waitingForRecords = false;
         return response.records;
       })
       .catch(err => {
         console.log("Error retrieving records: " + err);
         return [];
+      })
+      .finally(() => {
+        waitingForRecords = false;
       });
   }
 
