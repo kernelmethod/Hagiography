@@ -55,7 +55,7 @@
   {#await recordPromise}
   {:then}
   <div class="headline">
-    <GameTileFromString --height="calc(6*var(--base-font-size))" spec="{record.tile}" />
+    <GameTileFromString --height="calc(6*var(--base-font-size))" spec="{record.tile}" showBackground={false} />
     <span style="display: inline-block; padding-left: 1rem;">
       <h1>
         <ColorizedText text="{record.character_name}" />

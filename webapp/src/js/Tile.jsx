@@ -1,5 +1,9 @@
 import { COLORMAP } from '$js/Color.jsx';
 
+function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 class Tile {
     constructor(
         path,
@@ -10,13 +14,21 @@ class Tile {
         hflip = false,
         vflip = false
     ) {
-        this.path = path;
+        this.path = "/Textures/" + capitalize(path);
         this.renderString = renderString;
-        this.colorString = colorString;
+        this.colorString = new ColorString(colorString);
         this.detailColor = detailColor;
         this.tileColor = tileColor;
         this.hflip = hflip;
         this.vflip = vflip;
+    }
+
+    fgColor() {
+        return this.colorString.fgColor || 'y';
+    }
+
+    bgColor() {
+        return this.tileColor || this.colorString.bgColor;
     }
 }
 

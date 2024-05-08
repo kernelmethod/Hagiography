@@ -84,7 +84,7 @@
       <td>{r.game_mode}</td>
       <td>
         <div style="display: flex; align-items: center; flex-wrap: wrap;">
-          <GameTileFromString --height="var(--base-font-size)" spec="{r.tile}" />
+          <GameTileFromString --height="var(--base-font-size)" spec="{r.tile}" showBackground={false} />
           <span class="d-inline-block text-truncate" style="max-width: 400px; padding-left: 1rem;">
             <ColorizedText text="{r.character_name}" />
           </span>

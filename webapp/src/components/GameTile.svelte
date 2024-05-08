@@ -5,47 +5,36 @@
 
   let canvas;
 
-  export let tileURL;
-  export let renderString = " ";
-  export let colorString;
-  export let detailColor;
-  export let tileColor = null;
-  export let hflip = false;
-  export let vflip = false;
+  export let tile;
+  export let showBackground = true;
 
   onMount(() => {
     const img = new Image();
-    img.src = tileURL;
+    img.src = tile.path;
 
     const ctx = canvas.getContext('2d');
 
-    let cs = new ColorString(colorString);
-    const primary = COLORMAP[cs.fgColor];
-    const secondary = COLORMAP[detailColor];
-    const bgColorStr = (tileColor !== null && tileColor !== "") ? tileColor : cs.bgColor;
+    const primary = COLORMAP[tile.fgColor()];
+    const secondary = COLORMAP[tile.detailColor];
+    const bgColorStr = tile.bgColor();
 
-    if (bgColorStr in COLORMAP) {
-      let color = COLORMAP[bgColorStr];
-      color = "#" + color[0].toString(16) + color[1].toString(16) + color[2].toString(16);
-      canvas.style.setProperty("background-color", color);
-    }
-
-    if (hflip) {
+    if (tile.hflip) {
       ctx.translate(canvas.width, 0);
       ctx.scale(-1, 1);
     }
-    if (vflip) {
+    if (tile.vflip) {
       ctx.translate(0, canvas.height);
       ctx.scale(1, -1);
     }
 
     img.onload = () => {
+      // ctx.globalCompositionOperation = 'destination-under';
       ctx.drawImage(img, 0, 0);
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
 
       for (let i = 0; i < data.length; i += 4) {
-        let weight = data[i] / 255;
+        let weight = (data[i] === 255) ? 1 : 0;
 
         for (let j = 0; j < 3; j++) {
           // Weighted average of color channels for primary and
@@ -54,7 +43,16 @@
           data[i + j] = pixelColor;
         }
       }
+
       ctx.putImageData(imageData, 0, 0);
+
+      if (showBackground && bgColorStr in COLORMAP) {
+        let color = COLORMAP[bgColorStr];
+        color = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+        ctx.globalCompositeOperation = 'destination-over'
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
     };
   });
 </script>
