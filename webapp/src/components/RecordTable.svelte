@@ -7,23 +7,26 @@
   import Spinner from "$components/Spinner.svelte";
 
   let records = null;
+  let listRecordsPromise = null;
   const endpoint = "/api/records/list";
 
   function visitRecord(record) {
     window.location = "/records?id=" + record.id;
   }
 
-  onMount(async function () {
-    const response = await fetch(endpoint)
+  async function listRecords() {
+    return await fetch(endpoint)
       .then(response => response.json())
       .then(response => {
-        records = response.records;
+        return response.records;
       })
       .catch(err => {
-        records = [];
         console.log("Error retrieving records: " + err);
+        return [];
       });
-  });
+  }
+
+  onMount(() => { listRecordsPromise = listRecords(); });
 </script>
 
 <style>
@@ -53,22 +56,25 @@
     </tr>
   </thead>
   <tbody>
-  {#if records === null || records.length === 0}
+    {#if listRecordsPromise !== null}
+    {#await listRecordsPromise}
+    <!-- Records haven't been retrieved yet -->
     <tr>
       <td style="text-align: center;" colspan="5">
-        {#if records === null}
-        <!-- Records haven't been retrieved yet -->
         <Spinner>
           Loading game records...
         </Spinner>
-        {:else}
-        <!-- Records retrieved, none found -->
-        No records could be found at this time.
-        {/if}
       </td>
     </tr>
-  {:else}
-  {#each records as r, _}
+    {:then records}
+    {#if records.length === 0}
+    <tr>
+      <td style="text-align: center;" colspan="5">
+        No records could be found at this time.
+      </td>
+    </tr>
+    {:else}
+    {#each records as r, _}
     <tr on:click={() => visitRecord(r)} class="record">
       <td>{r.game_mode}</td>
       <td>
@@ -83,7 +89,9 @@
       <td>{r.turns}</td>
       <td><DateTime spec="{r.created}" /></td>
     </tr>
-  {/each}
-  {/if}
+    {/each}
+    {/if}
+    {/await}
+    {/if}
   </tbody>
 </table>
