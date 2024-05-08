@@ -21,9 +21,10 @@ export default {
             }
         },
         csp: {
-			directives: {
-				'script-src': ['self']
-			},
+            directives: {
+                'default-src': ['self'],
+                'style-src': ['self', 'unsafe-inline'],
+            },
         }
     }
 };
