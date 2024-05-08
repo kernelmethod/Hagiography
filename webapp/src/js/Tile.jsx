@@ -24,11 +24,11 @@ class Tile {
     }
 
     fgColor() {
-        return this.colorString.fgColor || 'y';
+        return this.tileColor || this.colorString.fgColor || 'y';
     }
 
     bgColor() {
-        return this.tileColor || this.colorString.bgColor;
+        return this.colorString.bgColor;
     }
 }
 
