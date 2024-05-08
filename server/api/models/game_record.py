@@ -1,4 +1,5 @@
 import secrets
+from api.models.fields import TileField
 from datetime import datetime, timezone
 from django.db import models
 from .user import User
@@ -26,7 +27,7 @@ class GameRecord(models.Model):
 
     game_mode = models.CharField(max_length=64, null=False)
     character_name = models.CharField(max_length=512, null=False)
-    tile = models.CharField(max_length=256, null=False)
+    tile = TileField()
     score = models.BigIntegerField(null=False)
     turns = models.BigIntegerField(null=False)
 

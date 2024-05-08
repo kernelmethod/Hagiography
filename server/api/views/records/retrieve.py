@@ -15,7 +15,7 @@ class RetrieveRecordView(BaseAPIView):
             "created": record.created.timestamp(),
             "game_mode": record.game_mode,
             "character_name": record.character_name,
-            "tile": record.tile,
+            "tile": str(record.tile),
             "score": record.score,
             "turns": record.turns,
             "owner": record.owner.username

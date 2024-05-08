@@ -63,7 +63,7 @@ class CreateRecordTestCase(ApiClientTestCase):
         record = GameRecord.objects.filter(id=id).first()
         self.assertEqual(record.game_mode, self.game_record.game_mode)
         self.assertEqual(record.character_name, self.game_record.character_name)
-        self.assertEqual(record.tile, self.game_record.tile)
+        self.assertEqual(str(record.tile), self.game_record.tile)
         self.assertEqual(record.score, self.game_record.score)
         self.assertEqual(record.turns, self.game_record.turns)
 
@@ -90,7 +90,7 @@ class RetrieveRecordTestCase(BaseTestCase):
         response = response.json()
         self.assertEqual(response.pop("game_mode"), record.game_mode)
         self.assertEqual(response.pop("character_name"), record.character_name)
-        self.assertEqual(response.pop("tile"), record.tile)
+        self.assertEqual(response.pop("tile"), str(record.tile))
         self.assertEqual(response.pop("score"), record.score)
         self.assertEqual(response.pop("turns"), record.turns)
         self.assertEqual(response.pop("owner"), record.owner.username)

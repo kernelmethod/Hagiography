@@ -1,1 +1,1 @@
-from .Tile import Tile  # noqa: F401
+from .Tile import LazyTile, Tile  # noqa: F401

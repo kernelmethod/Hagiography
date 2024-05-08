@@ -14,7 +14,7 @@ class ListRecordsView(BaseAPIView):
                 "created": r.created.timestamp(),
                 "game_mode": r.game_mode,
                 "character_name": r.character_name,
-                "tile": r.tile,
+                "tile": str(r.tile),
                 "score": r.score,
                 "turns": r.turns,
             }
