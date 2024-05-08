@@ -227,7 +227,11 @@ h1, h2, h3 {
 }
 
 .text-error {
-    color: red;
+    color: var(--qudcolor-R);
+}
+
+.text-success {
+    color: var(--qudcolor-G);
 }
 
 .text-truncate {

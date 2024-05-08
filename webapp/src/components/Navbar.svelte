@@ -1,22 +1,32 @@
 <script>
+  import { onDestroy } from 'svelte';
+  import HeroIcon from '$components/HeroIcon.svelte';
   import Modal from '$components/Modal.svelte';
-  import GameTile from '$components/GameTile.svelte';
+  import Spinner from '$components/Spinner.svelte';
+
+  import { userInfo, fetcher } from '$js/Auth.jsx';
 
   let email = '';
   let password = '';
 
-  let loginForm;
+  let loginForm, loginModal;
   let signupForm;
   let forgotPasswordForm;
+  let logoutModal;
 
   let loginPromise = null;
+  let logoutPromise = null;
 
-  async function attemptLogin() {
+  function loginButton() {
     loginForm.classList.add('was-validated');
 
     if (!loginForm.checkValidity())
       return;
 
+    loginPromise = attemptLogin();
+  }
+
+  async function attemptLogin() {
     const data = JSON.stringify({
       email: email,
       password: password,
@@ -31,15 +41,56 @@
       body: data,
     };
 
-    await fetch('/api/auth/login', settings)
+    await fetcher('/api/auth/login', settings)
       .then(response => {
         if (response.ok)
           return response.json();
 
         throw new Error("unable to login");
       })
-      .then(response => console.log(response))
-      .catch(err => console.log(err));
+      .then(response => {
+        userInfo.login(response.username, response.id);
+      })
+      .catch(err => {
+        console.log(err);
+        throw err;
+      });
+
+    // Sleep for a short period before closing the login modal
+    return () => new Promise(resolve => {
+      setTimeout(() => { loginModal.hide(); }, 500);
+    });
+  }
+
+  async function attemptLogout() {
+    logoutModal.show();
+
+    const settings = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    };
+
+    await fetcher('/api/auth/logout', settings)
+      .then(response => {
+        if (response.ok)
+          return response.json();
+
+        throw new Error("logout error");
+      })
+      .catch(err => {
+        console.log(err);
+        throw err;
+      })
+      .finally(() => {
+        userInfo.logout();
+      });
+
+    return () => new Promise(resolve => {
+      setTimeout(() => { logoutModal.hide(); }, 750);
+    });
   }
 
   function sendSignupLink() {
@@ -78,6 +129,15 @@
   .modal-input {
     color: black;
   }
+
+  .btn-dark {
+    --bs-btn-color: var(--qudcolor-y);
+  }
+
+  /* Hide submit inputs */
+  input[type=submit] {
+    display: none;
+  }
 </style>
 
 <div class="nav-background">
@@ -86,12 +146,7 @@
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
-            <GameTile
-              --height="calc(1.25 * var(--bs-navbar-brand-font-size))"
-              tileURL="/Textures/Creatures/sw_biographer_bot.bmp"
-              renderString="6"
-              colorString="y"
-              detailColor="Y" />
+            <HeroIcon --height="calc(1.25 * var(--bs-navbar-brand-font-size))" />
             <span class="d-inline-block p-2">
               <b>Hagiography</b>
             </span>
@@ -104,11 +159,29 @@
 
       <div class="collapse navbar-collapse" id="navbarToggler">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <!-- Options for logged-out users -->
+          {#if $userInfo !== null}
+          {#if $userInfo.isLoggedIn()}
           <li class="nav-item">
-            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#loginModalToggle">
+            <a href="/profile" class="btn">
+              <button type="button" class="btn btn-dark">
+                Profile
+              </button>
+            </a>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn btn-dark" on:click={() => logoutPromise = attemptLogout()}>
+              Logout
+            </button>
+          </li>
+          {:else}
+          <li class="nav-item">
+            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#loginModalToggle">
               Login
             </button>
           </li>
+          {/if}
+          {/if}
         </ul>
       </div>
     </nav>
@@ -116,13 +189,13 @@
 </div>
 
 <!-- Login modal -->
-<Modal id="loginModal">
+<Modal id="loginModal" bind:this={loginModal}>
   <span slot="modalHeader">
     Login to Hagiography
   </span>
 
   <div slot="modalBody">
-    <form bind:this={loginForm} class="needs-validation" novalidate>
+    <form bind:this={loginForm} on:submit|preventDefault={loginButton} class="needs-validation" novalidate>
       <div class="mb-3">
         <label for="email" class="col-form-label">Email:</label>
         <div class="input-group has-validation">
@@ -141,7 +214,28 @@
           </div>
         </div>
       </div>
+      <input type="submit">
     </form>
+
+    {#if loginPromise !== null}
+      <div class="text-center">
+        {#await loginPromise}
+        <Spinner>
+          Attempting to login...
+        </Spinner>
+        {:then exitModalPromise}
+          {#await exitModalPromise()}
+          <span class="text-success">
+            Login successful!
+          </span>
+          {/await}
+        {:catch error}
+        <span class="text-error">
+          {error}
+        </span>
+        {/await}
+      </div>
+    {/if}
 
     <button class="btn btn-link" data-bs-target="#forgotPasswordModalToggle" data-bs-toggle="modal">
       I forgot my password
@@ -153,7 +247,7 @@
 
   <div slot="modalFooter">
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary" on:click={attemptLogin}>Login</button>
+    <button type="button" class="btn btn-primary" on:click={loginButton}>Login</button>
   </div>
 </Modal>
 
@@ -163,7 +257,7 @@
     Sign up for Hagiography
   </span>
   <div slot="modalBody">
-    <form bind:this={signupForm} class="needs-validation" novalidate>
+    <form bind:this={signupForm} on:submit|preventDefault={sendSignupLink} class="needs-validation" novalidate>
       <div class="mb-3">
         <label for="email" class="col-form-label">Email:</label>
         <div class="input-group has-validation">
@@ -173,6 +267,7 @@
           </div>
         </div>
       </div>
+      <input type="submit">
     </form>
 
     <button class="btn btn-link" data-bs-target="#loginModalToggle" data-bs-toggle="modal">
@@ -193,7 +288,7 @@
   </span>
 
   <div slot="modalBody">
-    <form bind:this={forgotPasswordForm} class="needs-validation" novalidate>
+    <form bind:this={forgotPasswordForm} on:submit|preventDefault={sendPasswordResetLink} class="needs-validation" novalidate>
       <div class="mb-3">
         <label for="email" class="col-form-label">Email:</label>
         <div class="input-group has-validation">
@@ -203,6 +298,7 @@
           </div>
         </div>
       </div>
+      <input type="submit">
     </form>
 
     <button class="btn btn-link" data-bs-target="#loginModalToggle" data-bs-toggle="modal">
@@ -213,5 +309,32 @@
   <div slot="modalFooter">
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
     <button type="button" class="btn btn-primary" on:click={sendPasswordResetLink}>Send password reset link</button>
+  </div>
+</Modal>
+
+<!-- Logout modal -->
+<Modal id="logoutModal" bind:this={logoutModal}>
+  <span slot="modalHeader">
+    Logout
+  </span>
+
+  <div slot="modalBody" class="text-center">
+    {#if logoutPromise !== null}
+    {#await logoutPromise}
+    <Spinner>
+      Waiting for logout...
+    </Spinner>
+    {:then exitModalPromise}
+      {#await exitModalPromise()}
+      <span class="text-success">
+        Logout successful!
+      </span>
+      {/await}
+    {:catch error}
+    <span class="text-error">
+      {error}
+    </span>
+    {/await}
+    {/if}
   </div>
 </Modal>
