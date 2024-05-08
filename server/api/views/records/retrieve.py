@@ -12,7 +12,7 @@ class RetrieveRecordView(BaseAPIView):
             return JsonResponse({"detail": "not found"}, status=404)
 
         record_json = {
-            "created": record.created,
+            "created": record.created.timestamp(),
             "game_mode": record.game_mode,
             "character_name": record.character_name,
             "tile": record.tile,

@@ -107,7 +107,7 @@
       </td>
       <td>{r.score}</td>
       <td>{r.turns}</td>
-      <td><DateTime spec="{r.created}" /></td>
+      <td><DateTime timestamp="{r.created}" /></td>
     </tr>
     {/each}
     {/if}

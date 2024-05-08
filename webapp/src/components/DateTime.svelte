@@ -1,12 +1,12 @@
 <!-- Read a date and time from a string -->
 <script>
-  export let spec;
+  export let timestamp;
 
-  function parseDate(date) {
-    return (new Date(Date.parse(date))).toLocaleString();
+  function parseDate(ts) {
+    return (new Date(1000 * ts)).toLocaleString();
   }
 </script>
 
 <span>
-  {parseDate(spec)}
+  {parseDate(timestamp)}
 </span>

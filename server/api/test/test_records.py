@@ -20,7 +20,7 @@ class ListRecordsTestCase(BaseTestCase):
         self.assertEqual(record.pop("turns"), 67890)
         self.assertTrue(record.pop("tile", None) is not None)
         self.assertTrue(record.pop("id", None) is not None)
-        created = datetime.fromisoformat(record.pop("created"))
+        created = datetime.fromtimestamp(record.pop("created"), tz=timezone.utc)
         now = datetime.now(timezone.utc)
         self.assertTrue(now - created < timedelta(seconds=10))
         self.assertEqual(record, dict())
@@ -91,10 +91,13 @@ class RetrieveRecordTestCase(BaseTestCase):
         self.assertEqual(response.pop("game_mode"), record.game_mode)
         self.assertEqual(response.pop("character_name"), record.character_name)
         self.assertEqual(response.pop("tile"), record.tile)
-        self.assertTrue(response.pop("created", None) is not None)
         self.assertEqual(response.pop("score"), record.score)
         self.assertEqual(response.pop("turns"), record.turns)
         self.assertEqual(response.pop("owner"), record.owner.username)
+        created = datetime.fromtimestamp(response.pop("created"), tz=timezone.utc)
+        now = datetime.now(timezone.utc)
+        self.assertTrue(now - created < timedelta(seconds=10))
+        self.assertEqual(response, {})
 
     def test_retrieve_nonexistent_record(self):
         response = self.client.get(f"{self.endpoint}/beep_beep_boop")

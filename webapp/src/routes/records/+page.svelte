@@ -70,7 +70,7 @@
   <p><b>Game mode:</b> {record.game_mode}</p>
   <p><b>Score:</b> {record.score}</p>
   <p><b>Turns played:</b> {record.turns}</p>
-  <p><b>Played on:</b> <DateTime spec="{record.created}" /></p>
+  <p><b>Played on:</b> <DateTime timestamp="{record.created}" /></p>
   {:catch error}
   <h1 class="text-error">{error}</h1>
   {/await}

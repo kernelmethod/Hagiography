@@ -11,7 +11,7 @@ class ListRecordsView(BaseAPIView):
         for r in records:
             r_dict = {
                 "id": r.id,
-                "created": r.created,
+                "created": r.created.timestamp(),
                 "game_mode": r.game_mode,
                 "character_name": r.character_name,
                 "tile": r.tile,
