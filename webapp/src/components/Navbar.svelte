@@ -118,6 +118,12 @@
     padding: 0;
   }
 
+  .navbar-brand > div {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
   ul {
     align-items: center;
   }
@@ -145,7 +151,7 @@
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
-          <div style="display: flex; align-items: center; flex-wrap: wrap;">
+          <div>
             <HeroIcon --height="calc(1.25 * var(--bs-navbar-brand-font-size))" />
             <span class="d-inline-block p-2">
               <b>Hagiography</b>

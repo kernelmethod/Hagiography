@@ -46,7 +46,7 @@
 {#if renderError === null}
 <span class="{classes}" bind:this={textSpan}></span>
 {:else}
-<span style="font-weight: bold; color: red;">
+<span class="render-error">
   {renderError}
 </span>
 {/if}

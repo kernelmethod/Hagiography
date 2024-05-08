@@ -47,6 +47,21 @@
     background-color: var(--table-highlight);
     cursor: pointer;
   }
+
+  .character-name {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .character-name > span {
+    max-width: 400px;
+    padding-left: 1rem;
+  }
+
+  .multicol-text {
+    text-align: center;
+  }
 </style>
 
 <table class="table bg-body-tertiary border border-primary align-middle table-responsive">
@@ -63,7 +78,7 @@
     {#if waitingForRecords}
     <!-- Records haven't been retrieved yet -->
     <tr>
-      <td style="text-align: center;" colspan="5">
+      <td class="multicol-text" colspan="5">
         <Spinner>
           Loading game records...
         </Spinner>
@@ -74,7 +89,7 @@
     {#await listRecordsPromise then records}
     {#if records.length === 0}
     <tr>
-      <td style="text-align: center;" colspan="5">
+      <td class="multicol-text" colspan="5">
         No records could be found at this time.
       </td>
     </tr>
@@ -83,9 +98,9 @@
     <tr on:click={() => visitRecord(r)} class="record">
       <td>{r.game_mode}</td>
       <td>
-        <div style="display: flex; align-items: center; flex-wrap: wrap;">
+        <div class="character-name">
           <GameTileFromString --height="var(--base-font-size)" spec="{r.tile}" showBackground={false} />
-          <span class="d-inline-block text-truncate" style="max-width: 400px; padding-left: 1rem;">
+          <span class="d-inline-block text-truncate">
             <ColorizedText text="{r.character_name}" />
           </span>
         </div>

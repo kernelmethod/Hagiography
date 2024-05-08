@@ -38,6 +38,11 @@
     margin-bottom: 1rem;
   }
 
+  .character-name {
+    display: inline-block;
+    padding-left: 1rem;
+  }
+
   p {
     margin: 0;
   }
@@ -55,7 +60,7 @@
   {#await recordPromise then}
   <div class="headline">
     <GameTileFromString --height="calc(6*var(--base-font-size))" spec="{record.tile}" showBackground={false} />
-    <span style="display: inline-block; padding-left: 1rem;">
+    <span class="character-name">
       <h1>
         <ColorizedText text="{record.character_name}" />
       </h1>

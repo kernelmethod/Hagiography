@@ -4,7 +4,7 @@
 </script>
 
 <main>
-  <div class="text-center" style="margin-bottom: 2rem;">
+  <div class="text-center mb-4">
     <HeroIcon --height="128px" />
     <h2>
       Welcome to <b>Hagiography</b>!

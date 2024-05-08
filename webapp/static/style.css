@@ -125,6 +125,10 @@ body {
     border: 0;
 }
 
+.webapp-body {
+    display: content;
+}
+
 main {
     min-height: 60vh;
 }
