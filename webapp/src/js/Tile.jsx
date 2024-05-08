@@ -14,7 +14,15 @@ class Tile {
         hflip = false,
         vflip = false
     ) {
-        this.path = "/Textures/" + capitalize(path);
+        // Some older tiles have their paths prefixed with Assets_Content_Textures
+        let result = /^Assets_Content_Textures_([a-zA-Z0-9]*)_(.*)$/.exec(path);
+        if (result !== null) {
+            this.path = '/Textures/' + result[1] + '/' + result[2];
+        }
+        else {
+            this.path = '/Textures/' + capitalize(path);
+        }
+
         this.renderString = renderString;
         this.colorString = new ColorString(colorString);
         this.detailColor = detailColor;
