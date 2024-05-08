@@ -3,3 +3,4 @@ Django==5.0.4
 gunicorn==22.0.0
 pydantic==2.7.1
 pyseto==1.7.8
+msgpack==1.0.8
