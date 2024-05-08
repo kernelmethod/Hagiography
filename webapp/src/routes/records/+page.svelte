@@ -22,8 +22,10 @@
         return response.json();
       })
       .then(response => {
-        waitingForRecord = false;
         record = response;
+      })
+      .finally(() => {
+        waitingForRecord = false;
       });
   }
 
