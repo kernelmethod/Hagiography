@@ -1,7 +1,5 @@
-from api import schemas
-from api.models import GameRecord
+from api import schemas, models, utils
 from api.test.utils import BaseTestCase, ApiClientTestCase
-from api.utils import Tile
 from datetime import datetime, timedelta, timezone
 from django.test import Client
 
@@ -33,7 +31,7 @@ class CreateRecordTestCase(ApiClientTestCase):
     def setUp(self):
         super().setUp()
 
-        self.character_tile = Tile(
+        self.character_tile = utils.Tile(
             path="Creatures/sw_trash_monk.bmp",
             render_string="",
             color_string="y",
@@ -49,7 +47,7 @@ class CreateRecordTestCase(ApiClientTestCase):
         )
 
     def test_create_record(self):
-        self.assertEqual(GameRecord.objects.count(), 1)
+        self.assertEqual(models.GameRecord.objects.count(), 1)
         response = self.client.put(
             self.endpoint,
             content_type="application/json",
@@ -57,10 +55,10 @@ class CreateRecordTestCase(ApiClientTestCase):
             data=self.game_record.model_dump_json()
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(GameRecord.objects.count(), 2)
+        self.assertEqual(models.GameRecord.objects.count(), 2)
 
         id = response.json()["id"]
-        record = GameRecord.objects.filter(id=id).first()
+        record = models.GameRecord.objects.filter(id=id).first()
         self.assertEqual(record.game_mode, self.game_record.game_mode)
         self.assertEqual(record.character_name, self.game_record.character_name)
         self.assertEqual(str(record.tile), self.game_record.tile)
@@ -84,7 +82,7 @@ class RetrieveRecordTestCase(BaseTestCase):
     endpoint = "/api/records/id"
 
     def test_retrieve_record(self):
-        record = GameRecord.objects.first()
+        record = models.GameRecord.objects.first()
         response = self.client.get(f"{self.endpoint}/{record.id}")
         self.assertEqual(response.status_code, 200)
         response = response.json()
@@ -102,3 +100,46 @@ class RetrieveRecordTestCase(BaseTestCase):
     def test_retrieve_nonexistent_record(self):
         response = self.client.get(f"{self.endpoint}/beep_beep_boop")
         self.assertEqual(response.status_code, 404)
+
+
+class UploadJournalEntriesTestCase(ApiClientTestCase):
+
+    endpoint = "/api/records/journal/create"
+
+    def setUp(self):
+        super().setUp()
+        self.record = models.GameRecord.objects.first()
+
+        tiles = utils.TileCollection(tiles=[self.example_tile] * 5 * 9)
+        journal_entry = schemas.JournalAccomplishment(
+            text="On the 1st of Ut yara Ux, you arrived in Joppa.",
+            time=101,
+            snapshot=tiles
+        )
+        self.body = schemas.JournalAccomplishmentsCreate(
+            game_record_id=self.record.id,
+            accomplishments=[journal_entry]
+        )
+
+    def test_create_journal_entries(self):
+        original_num_entries = models.JournalAccomplishment.objects.count()
+        response = self.client.put(
+            self.endpoint,
+            content_type="application/json",
+            headers={"X-Access-Token": self.apitoken},
+            data=self.body.model_dump_json()
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Check that the journal entries were added to the database
+        current_num_entries = models.JournalAccomplishment.objects.count()
+        self.assertEqual(current_num_entries, original_num_entries + 1)
+
+    def test_create_journal_entries_preauth(self):
+        client = Client(enforce_csrf_checks=True)
+        response = client.put(
+            self.endpoint,
+            content_type="application/json",
+            data=self.body.model_dump_json()
+        )
+        self.assertEqual(response.status_code, 401)

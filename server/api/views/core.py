@@ -20,11 +20,10 @@ class ExpectsJSONMixin:
             return JsonResponse({"detail": "expected JSON"}, status=422)
 
         try:
-            json = from_json(request.body)
             if self.input_model is None:
-                request.json = json
+                request.json = from_json(request.body)
             else:
-                request.json = self.input_model.model_validate(json)
+                request.json = self.input_model.model_validate_json(request.body)
         except Exception as _ex:  # noqa: F841
             return JsonResponse({"detail": "invalid body"}, status=422)
 
