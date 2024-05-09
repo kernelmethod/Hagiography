@@ -1,3 +1,5 @@
+import json
+
 from api import schemas, models, utils
 from api.test.utils import BaseTestCase, ApiClientTestCase
 from datetime import datetime, timedelta, timezone
@@ -133,6 +135,17 @@ class UploadJournalEntriesTestCase(ApiClientTestCase):
         # Check that the journal entries were added to the database
         current_num_entries = models.JournalAccomplishment.objects.count()
         self.assertEqual(current_num_entries, original_num_entries + 1)
+
+    def test_create_with_bad_input(self):
+        body = json.loads(self.body.model_dump_json())
+        body.pop("game_record_id")
+        response = self.client.put(
+            self.endpoint,
+            content_type="application/json",
+            headers={"X-Access-Token": self.apitoken},
+            data=json.dumps(body)
+        )
+        self.assertEqual(response.status_code, 422)
 
     def test_create_journal_entries_preauth(self):
         client = Client(enforce_csrf_checks=True)
