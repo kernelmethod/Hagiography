@@ -35,7 +35,7 @@ class CreateRecordTestCase(ApiClientTestCase):
             path="Creatures/sw_trash_monk.bmp",
             render_string="",
             color_string="y",
-            detail_color="r"
+            detail_color="r",
         )
 
         self.game_record = schemas.GameRecordCreate(
@@ -43,7 +43,7 @@ class CreateRecordTestCase(ApiClientTestCase):
             character_name="Sixshrew",
             tile=str(self.character_tile),
             score=12345,
-            turns=67890
+            turns=67890,
         )
 
     def test_create_record(self):
@@ -52,7 +52,7 @@ class CreateRecordTestCase(ApiClientTestCase):
             self.endpoint,
             content_type="application/json",
             headers={"X-Access-Token": self.apitoken},
-            data=self.game_record.model_dump_json()
+            data=self.game_record.model_dump_json(),
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(models.GameRecord.objects.count(), 2)
@@ -72,7 +72,7 @@ class CreateRecordTestCase(ApiClientTestCase):
         response = client.put(
             self.endpoint,
             content_type="application/json",
-            data=self.game_record.model_dump_json()
+            data=self.game_record.model_dump_json(),
         )
         self.assertEqual(response.status_code, 401)
 
@@ -114,11 +114,10 @@ class UploadJournalEntriesTestCase(ApiClientTestCase):
         journal_entry = schemas.JournalAccomplishment(
             text="On the 1st of Ut yara Ux, you arrived in Joppa.",
             time=101,
-            snapshot=tiles
+            snapshot=tiles,
         )
         self.body = schemas.JournalAccomplishmentsCreate(
-            game_record_id=self.record.id,
-            accomplishments=[journal_entry]
+            game_record_id=self.record.id, accomplishments=[journal_entry]
         )
 
     def test_create_journal_entries(self):
@@ -127,7 +126,7 @@ class UploadJournalEntriesTestCase(ApiClientTestCase):
             self.endpoint,
             content_type="application/json",
             headers={"X-Access-Token": self.apitoken},
-            data=self.body.model_dump_json()
+            data=self.body.model_dump_json(),
         )
         self.assertEqual(response.status_code, 200)
 
@@ -140,6 +139,46 @@ class UploadJournalEntriesTestCase(ApiClientTestCase):
         response = client.put(
             self.endpoint,
             content_type="application/json",
-            data=self.body.model_dump_json()
+            data=self.body.model_dump_json(),
         )
         self.assertEqual(response.status_code, 401)
+
+    def test_create_journal_entries_unauthorized(self):
+        # Creating journal entries for a record that you don't own should result
+        # in a 403 error.
+
+        # Sign in as another user and generate an API key for them
+        client = Client(enforce_csrf_checs=True)
+        response = client.post(
+            "/api/auth/login",
+            content_type="application/json",
+            data={"email": "user2@example.org", "password": "swordphish2"},
+        )
+        self.assertEqual(response.status_code, 200)
+
+        response = client.post(
+            "/api/auth/apikeys/generate",
+            headers={"X-CSRFToken": client.cookies["csrftoken"].value},
+        )
+        self.assertEqual(response.status_code, 200)
+
+        token = response.json()["token"]
+        response = client.put(
+            self.endpoint,
+            content_type="application/json",
+            headers={"X-Access-Token": token},
+            data=self.body.model_dump_json(),
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_create_too_many_journal_entries(self):
+        # Creating a very large number of journal entries should also result in
+        # an error
+        self.body.accomplishments *= 5001
+        response = self.client.put(
+            self.endpoint,
+            content_type="application/json",
+            headers={"X-Access-Token": self.apitoken},
+            data=self.body.model_dump_json(),
+        )
+        self.assertEqual(response.status_code, 422)

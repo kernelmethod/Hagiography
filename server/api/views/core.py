@@ -46,6 +46,6 @@ class TokenRequiredMixin(ABC):
         try:
             request.user = factory.validate_token(token, scopes=self.required_scopes)
         except TokenValidationError:
-            return JsonResponse({"detail": "invalid or expired token"}, status=401)
+            return JsonResponse({"detail": "invalid or expired token"}, status=403)
 
         return super().dispatch(request, *args, **kwargs)

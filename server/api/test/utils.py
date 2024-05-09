@@ -17,6 +17,10 @@ class BaseTestCase(TestCase):
         user.set_password("swordphish")
         user.save()
 
+        user2 = User(email="user2@example.org", username="user2")
+        user2.set_password("swordphish2")
+        user2.save()
+
         # Pre-populate database
         GameRecord(
             game_mode="Classic",
