@@ -9,3 +9,6 @@ class JournalAccomplishment(models.Model):
     time = models.BigIntegerField(null=False)
     text = models.CharField(max_length=1024, null=False)
     snapshot = models.CharField(max_length=96 * 5 * 9)
+
+    class Meta:
+        indexes = [models.Index(fields=["game_record", "time"])]

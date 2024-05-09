@@ -13,3 +13,8 @@ class JournalAccomplishmentsCreate(BaseModel):
 
     game_record_id: str
     accomplishments: list[JournalAccomplishment]
+
+
+class JournalAccomplishmentsList(BaseModel):
+
+    entries: list[JournalAccomplishment]

@@ -11,5 +11,6 @@ urlpatterns = [
     path("records/create", views.records.CreateRecordView.as_view()),
     path("records/id/<str:id>", views.records.RetrieveRecordView.as_view()),
     path("records/journal/create", views.records.journal.CreateJournalAccomplishmentsView.as_view()),
+    path("records/journal/list", views.records.journal.ListJournalAccomplishmentsView.as_view()),
     path("users/self", views.users.SelfView.as_view()),
 ]

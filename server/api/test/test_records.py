@@ -115,7 +115,7 @@ class UploadJournalEntriesTestCase(ApiClientTestCase):
         tiles = utils.TileCollection(tiles=[self.example_tile] * 5 * 9)
         journal_entry = schemas.JournalAccomplishment(
             text="On the 1st of Ut yara Ux, you arrived in Joppa.",
-            time=101,
+            time=1,
             snapshot=tiles,
         )
         self.body = schemas.JournalAccomplishmentsCreate(
@@ -195,3 +195,42 @@ class UploadJournalEntriesTestCase(ApiClientTestCase):
             data=self.body.model_dump_json(),
         )
         self.assertEqual(response.status_code, 422)
+
+
+class ListJournalEntriesTestCase(BaseTestCase):
+
+    endpoint = "/api/records/journal/list"
+
+    def setUp(self):
+        super().setUp()
+        self.record = models.GameRecord.objects.first()
+
+    def test_list_records(self):
+        endpoint = f"{self.endpoint}?id={self.record.id}&start=0&end=10"
+        response = self.client.get(endpoint)
+        self.assertEqual(response.status_code, 200)
+        response = response.json()
+        entries = response.pop("entries")
+        self.assertEqual(response, {})
+        self.assertEqual(len(entries), 1)
+
+    def test_retrieve_too_many_records(self):
+        # Request more journal entries than allowed by the endpoint
+        endpoint = f"{self.endpoint}?id={self.record.id}&start=0&end=501"
+        response = self.client.get(endpoint)
+        self.assertEqual(response.status_code, 422)
+
+    def test_invalid_parameters(self):
+        # id, start, and end parameters must all be specified
+        endpoint = f"{self.endpoint}?id={self.record.id}&start=0"
+        self.assertEqual(self.client.get(endpoint).status_code, 422)
+
+        endpoint = f"{self.endpoint}?id={self.record.id}&end=10"
+        self.assertEqual(self.client.get(endpoint).status_code, 422)
+
+        endpoint = f"{self.endpoint}?start=0&end=10"
+        self.assertEqual(self.client.get(endpoint).status_code, 422)
+
+        # Try retrieving journal entries for a record that doesn't exist
+        endpoint = f"{self.endpoint}?id=foo_bar_baz&start=0&end=10"
+        self.assertEqual(self.client.get(endpoint).status_code, 404)

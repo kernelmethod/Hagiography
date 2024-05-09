@@ -1,4 +1,5 @@
-from api.models import GameRecord, User
+from api import utils
+from api.models import GameRecord, User, JournalAccomplishment
 from api.utils import Tile
 from django.test import Client, TestCase
 
@@ -22,14 +23,24 @@ class BaseTestCase(TestCase):
         user2.save()
 
         # Pre-populate database
-        GameRecord(
+        record = GameRecord(
             game_mode="Classic",
             character_name="{{c|Resheph}}",
             tile=str(BaseTestCase.example_tile),
             score=12345,
             turns=67890,
             owner=user,
-        ).save()
+        )
+        record.save()
+
+        tiles = utils.TileCollection(tiles=[BaseTestCase.example_tile] * 5 * 9)
+        journal_entry = JournalAccomplishment(
+            game_record=record,
+            text="On the 5th of Ut yara Ux, you abandoned all hope.",
+            time=101,
+            snapshot=str(tiles),
+        )
+        journal_entry.save()
 
     def setUp(self):
         BaseTestCase.populate()
