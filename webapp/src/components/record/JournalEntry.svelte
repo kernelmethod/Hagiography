@@ -29,10 +29,6 @@
 
     for (let i = 0; i < tiles.length; i++) {
       await promises[i];
-    }
-
-    for (let i = 0; i < tiles.length; i++) {
-      await promises[i];
       const subcanvas = subcanvases[i];
 
       const cornerX = (i % 9) * 16;
@@ -40,6 +36,11 @@
 
       ctx.drawImage(subcanvas, cornerX, cornerY);
     }
+
+    // Color in background
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   onMount(() => {
@@ -54,7 +55,6 @@
   }
 
   canvas {
-    background-color: black;
     image-rendering: crisp-edges;
     min-width: 400px;
   }
