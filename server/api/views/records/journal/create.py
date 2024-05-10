@@ -44,7 +44,12 @@ class CreateJournalAccomplishmentsView(
             )
 
         acc = [
-            JournalAccomplishment(game_record=record, time=j.time, snapshot=TileCollection.from_string(j.snapshot))
+            JournalAccomplishment(
+                game_record=record,
+                text=j.text,
+                time=j.time,
+                snapshot=TileCollection.from_string(j.snapshot),
+            )
             for j in accomplishments
         ]
         JournalAccomplishment.objects.bulk_create(acc)

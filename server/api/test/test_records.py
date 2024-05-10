@@ -222,6 +222,11 @@ class ListJournalEntriesTestCase(BaseTestCase):
         entries = response.pop("entries")
         self.assertEqual(response, {})
         self.assertEqual(len(entries), 1)
+        entry = entries[0]
+        self.assertEqual(entry.pop("time"), 101)
+        self.assertEqual(entry.pop("text"), "On the 5th of Ut yara Ux, you abandoned all hope.")
+        self.assertTrue(entry.pop("snapshot", None) is not None)
+        self.assertEqual(entry, {})
 
     def test_retrieve_too_many_records(self):
         # Request more journal entries than allowed by the endpoint
