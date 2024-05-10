@@ -1,6 +1,7 @@
 from .auth import Login  # noqa: F401
 from .journal import (  # noqa: F401
     JournalAccomplishment,
+    JournalAccomplishmentCreate,
     JournalAccomplishmentsCreate,
     JournalAccomplishmentsList,
 )

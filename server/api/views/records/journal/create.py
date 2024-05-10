@@ -1,5 +1,6 @@
 from api import schemas
 from api.models import GameRecord, JournalAccomplishment
+from api.utils import TileCollection
 from api.views.core import BaseAPIView, ExpectsJSONMixin, TokenRequiredMixin
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
@@ -43,7 +44,7 @@ class CreateJournalAccomplishmentsView(
             )
 
         acc = [
-            JournalAccomplishment(game_record=record, time=j.time, snapshot=j.snapshot)
+            JournalAccomplishment(game_record=record, time=j.time, snapshot=TileCollection.from_string(j.snapshot))
             for j in accomplishments
         ]
         JournalAccomplishment.objects.bulk_create(acc)

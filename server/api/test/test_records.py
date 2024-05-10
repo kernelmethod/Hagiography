@@ -122,10 +122,10 @@ class UploadJournalEntriesTestCase(ApiClientTestCase):
         self.record = models.GameRecord.objects.first()
 
         tiles = utils.TileCollection(tiles=[self.example_tile] * 5 * 9)
-        journal_entry = schemas.JournalAccomplishment(
+        journal_entry = schemas.JournalAccomplishmentCreate(
             text="On the 1st of Ut yara Ux, you arrived in Joppa.",
             time=1,
-            snapshot=tiles,
+            snapshot=str(tiles),
         )
         self.body = schemas.JournalAccomplishmentsCreate(
             game_record_id=self.record.id, accomplishments=[journal_entry]

@@ -9,10 +9,17 @@ class JournalAccomplishment(BaseModel):
     snapshot: TileCollection
 
 
+class JournalAccomplishmentCreate(BaseModel):
+
+    time: int
+    text: str
+    snapshot: str
+
+
 class JournalAccomplishmentsCreate(BaseModel):
 
     game_record_id: str
-    accomplishments: list[JournalAccomplishment]
+    accomplishments: list[JournalAccomplishmentCreate]
 
 
 class JournalAccomplishmentsList(BaseModel):
