@@ -1,0 +1,74 @@
+<script>
+  import { onMount } from 'svelte';
+  import { parseTileSpec } from '$js/Tile.jsx';
+
+  import ColorizedText from '$components/ColorizedText.svelte';
+
+  export let text;
+  export let snapshot;
+
+  let canvas;
+  let snapshotPromise = null;
+  let tiles = snapshot.split('|').map(parseTileSpec);
+
+  async function drawSnapshot() {
+    let subcanvases = [];
+    let promises = [];
+
+    for (let i = 0; i < tiles.length; i++) {
+      const tile = tiles[i];
+      const subcanvas = document.createElement('canvas');
+      subcanvas.width = 16;
+      subcanvas.height = 24;
+
+      subcanvases.push(subcanvas);
+      promises.push(tile.render(subcanvas, true));
+    }
+
+    const ctx = canvas.getContext('2d');
+
+    for (let i = 0; i < tiles.length; i++) {
+      await promises[i];
+    }
+
+    for (let i = 0; i < tiles.length; i++) {
+      await promises[i];
+      const subcanvas = subcanvases[i];
+
+      const cornerX = (i % 9) * 16;
+      const cornerY = Math.trunc(i / 9) * 24;
+
+      ctx.drawImage(subcanvas, cornerX, cornerY);
+    }
+  }
+
+  onMount(() => {
+    snapshotPromise = drawSnapshot();
+  });
+</script>
+
+<style>
+  div {
+    color: var(--qudcolor-y);
+    font-style: italic;
+  }
+
+  canvas {
+    background-color: black;
+    image-rendering: crisp-edges;
+    min-width: 400px;
+  }
+</style>
+
+<div>
+  <p>
+    <ColorizedText text={text} bold={false} />
+  </p>
+
+  <div id="testDiv">
+  </div>
+
+  {#await snapshotPromise then}
+  {/await}
+  <canvas bind:this={canvas} width=144 height=120></canvas>
+</div>
