@@ -28,13 +28,18 @@
     const ctx = canvas.getContext('2d');
 
     for (let i = 0; i < tiles.length; i++) {
-      await promises[i];
-      const subcanvas = subcanvases[i];
+      try {
+        await promises[i];
+        const subcanvas = subcanvases[i];
 
-      const cornerX = (i % 9) * 16;
-      const cornerY = Math.trunc(i / 9) * 24;
+        const cornerX = (i % 9) * 16;
+        const cornerY = Math.trunc(i / 9) * 24;
 
-      ctx.drawImage(subcanvas, cornerX, cornerY);
+        ctx.drawImage(subcanvas, cornerX, cornerY);
+      }
+      catch (e) {
+        console.log(`snapshot render error: {e}`);
+      }
     }
 
     // Color in background
