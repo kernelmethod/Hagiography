@@ -329,7 +329,7 @@ class ShadedFragment {
         this.text = text;
 
         if (shader === null) {
-            this.shader = new Shader('Y', 'solid');
+            this.shader = new Shader('y', 'solid');
             return;
         }
 
