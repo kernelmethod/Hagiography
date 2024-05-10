@@ -6,6 +6,15 @@ from datetime import datetime, timedelta, timezone
 from django.test import Client
 
 
+class JournalModelsTestCase(BaseTestCase):
+
+    def test_parse_tile_collection(self):
+        collection = "Tiles/tile-dirt1.png;.;&w;k;;0;0|Tiles/tile-dirt1.png;.;&w;k;;0;0|Tiles/tile-dirt1.png;';&w;k;;0;0|Terrain/sw_ground_dots1.png;ú;&w;w;;0;0|Terrain/sw_ground_dots3.png;ú;&w;w;;0;0|Terrain/sw_ground_dots3.png;ú;&w;w;;0;0|Terrain/sw_ground_dots3.png;ú;&w;w;;0;0|Tiles/tile-dirt1.png;.;&y;k;;0;0|Tiles/tile-dirt1.png;`;&y;k;;0;0|Terrain/sw_ground_dots2.png;ú;&w;w;;0;0|Tiles/tile-dirt1.png;';&w;k;;0;0|Tiles/tile-dirt1.png;.;&w;k;;0;0|Terrain/sw_ground_dots3.png;ú;&w;w;;0;0|Terrain/sw_ground_dots3.png;ú;&w;w;;0;0|Terrain/sw_ground_dots1.png;ú;&w;w;;0;0|Terrain/sw_ground_dots1.png;ú;&w;w;;0;0|tiles/sw_torch_nofire.png;ù;&r;w;;0;0|assets_content_textures_tiles_tile-grass1.png;.;&g;k;;0;0|Terrain/sw_ground_dots1.png;ú;&w;w;;0;0|Terrain/sw_ground_dots3.png;ú;&w;w;;0;0|Terrain/sw_ground_dots3.png;ú;&w;w;;0;0|Terrain/sw_ground_dots3.png;ú;&w;w;;0;0|creatures/caste_17.bmp;@;&Y;r;;0;0|Terrain/sw_ground_dots4.png;ú;&w;w;;0;0|Terrain/sw_ground_dots4.png;ú;&w;w;;0;0|assets_content_textures_tiles_tile-grass1.png;.;&G;k;;0;0|Terrain/sw_grass1.bmp;.;&G;k;;0;0|Tiles/tile-dirt1.png;,;&w;k;;0;0|Tiles/tile-dirt1.png;,;&w;k;;0;0|Terrain/sw_ground_dots4.png;ú;&w;w;;0;0|Terrain/sw_ground_dots4.png;ú;&w;w;;0;0|Terrain/sw_ground_dots2.png;ú;&w;w;;0;0|Terrain/sw_ground_dots3.png;ú;&w;w;;0;0|Terrain/sw_grass1.bmp;.;&g;k;;0;0|Tiles/tile-dirt1.png;,;&w;k;;0;0|Tiles/tile-dirt1.png;.;&y;k;;0;0|assets_content_textures_tiles_tile-grass1.png;`;&g;k;;0;0|Tiles/tile-dirt1.png;,;&w;k;;0;0|Terrain/sw_ground_dots1.png;ú;&w;w;;0;0|Terrain/sw_ground_dots1.png;ú;&w;w;;0;0|Terrain/sw_ground_dots2.png;ú;&w;w;;0;0|Terrain/sw_ground_dots1.png;ú;&w;w;;0;0|Terrain/sw_grass3.bmp;';&G;k;;0;0|assets_content_textures_tiles_tile-grass1.png;,;&g;k;;0;0|Tiles/tile-dirt1.png;';&w;k;;0;0"  # noqa: E501
+
+        collection = utils.TileCollection.from_string(collection)
+        self.assertEqual(len(collection), 9 * 5)
+
+
 class ListRecordsTestCase(BaseTestCase):
 
     def test_list_records(self):
@@ -194,7 +203,7 @@ class UploadJournalEntriesTestCase(ApiClientTestCase):
             headers={"X-Access-Token": self.apitoken},
             data=self.body.model_dump_json(),
         )
-        self.assertEqual(response.status_code, 422)
+        self.assertEqual(response.status_code, 400)
 
 
 class ListJournalEntriesTestCase(BaseTestCase):

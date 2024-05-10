@@ -49,8 +49,11 @@ class TileCollection(BaseModel):
 
     @classmethod
     def from_string(self, s: str) -> TileCollection:
-        tiles = [Tile(t) for t in s.split("|")]
+        tiles = [Tile.from_string(t) for t in s.split("|")]
         return TileCollection(tiles=tiles)
+
+    def __len__(self) -> int:
+        return len(self.tiles)
 
     def __str__(self) -> str:
         return "|".join(str(t) for t in self.tiles)
@@ -127,6 +130,9 @@ class LazyTileCollection(BaseModel):
     @classmethod
     def from_string(cls, s: str) -> LazyTile:
         return LazyTileCollection(spec_=s)
+
+    def __len__(self) -> int:
+        return len(self.tiles)
 
     def __str__(self) -> str:
         return self.spec

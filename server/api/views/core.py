@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from api.auth import TokenFactory, TokenValidationError
+from django.core.exceptions import SuspiciousOperation
 from django.http import JsonResponse
 from django.views import View
 from pydantic import BaseModel, ValidationError
@@ -26,6 +27,8 @@ class ExpectsJSONMixin:
                 request.json = self.input_model.model_validate_json(request.body)
         except ValidationError as _ex:  # noqa: F841
             return JsonResponse({"detail": "invalid body"}, status=422)
+        except SuspiciousOperation as _ex:  # noqa: F841
+            return JsonResponse({"detail": "operation disallowed"}, status=400)
         except Exception:
             return JsonResponse({"detail": "error encountered while parsing input"}, status=500)
 
