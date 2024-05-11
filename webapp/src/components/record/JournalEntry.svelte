@@ -54,26 +54,31 @@
 </script>
 
 <style>
-  div {
-    color: var(--qudcolor-y);
-    font-style: italic;
+  canvas {
+    image-rendering: pixelated;
+    min-width: 400px;
   }
 
-  canvas {
-    image-rendering: crisp-edges;
-    min-width: 400px;
+  .snapshot {
+    text-align: center;
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
+
+  .entry-prefix {
+    color: var(--qudcolor-K);
   }
 </style>
 
 <div>
   <p>
+    <span class="entry-prefix">$</span>
     <ColorizedText text={text} bold={false} />
   </p>
 
-  <div id="testDiv">
+  <div class="snapshot">
+    {#await snapshotPromise then}
+    {/await}
+    <canvas bind:this={canvas} width=144 height=120></canvas>
   </div>
-
-  {#await snapshotPromise then}
-  {/await}
-  <canvas bind:this={canvas} width=144 height=120></canvas>
 </div>

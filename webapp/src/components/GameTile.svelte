@@ -17,7 +17,7 @@
 <style>
   canvas {
     height: var(--height, 100%);
-    image-rendering: crisp-edges;
+    image-rendering: pixelated;
   }
 </style>
 
