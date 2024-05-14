@@ -7,6 +7,7 @@
   import Spinner from '$components/Spinner.svelte';
   import Modal from '$components/Modal.svelte';
 
+  import BuildSummary from '$components/record/BuildSummary.svelte';
   import JournalEntry from '$components/record/JournalEntry.svelte';
   import RecordHeading from '$components/record/RecordHeading.svelte';
 
@@ -73,11 +74,6 @@
   p {
     margin: 0;
   }
-
-  .record-header {
-    color: var(--qudcolor-W);
-    text-decoration: none;
-  }
 </style>
 
 <main>
@@ -103,6 +99,18 @@
   <p><b>Score:</b> {record.score}</p>
   <p><b>Turns played:</b> {record.turns}</p>
   <p><b>Played on:</b> <DateTime timestamp="{record.created}" /></p>
+  {:catch error}
+  <h1 class="text-error">{error}</h1>
+  {/await}
+
+  <!-- Build -->
+
+  <RecordHeading>
+    Build
+  </RecordHeading>
+
+  <BuildSummary buildCode={record.build_code} />
+
   {#if buildCodeModal !== null}
   <p>
     <button type="button" class="btn btn-primary" on:click={() => buildCodeModal.show()}>
@@ -110,9 +118,8 @@
     </button>
   </p>
   {/if}
-  {:catch error}
-  <h1 class="text-error">{error}</h1>
-  {/await}
+
+  <!-- Journal entries -->
 
   {#await journalPromise}
     <Spinner --size="96px">
