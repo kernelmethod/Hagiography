@@ -12,6 +12,8 @@ class BaseTestCase(TestCase):
         detail_color="r",
     )
 
+    example_build_code = """H4sIAAAAAAAAA81WW2vbMBR+L/Q/CLNHJyShdCOQhywda7cW0tp0g9EH2T7YWmXJ6LKShfz3HtlpYsdt03ZrSCAo0ncun84tmh8eEOKlNIc/oDSTwhsSb9DtdQe94+7go+eXeGQZT2oCfRToLbFcJpaDxuNfbk/IvFpWUDgrwCn9vDrvTjKqaGxAfXYWdffSJu77FYQ0KHZRKvhkrDXkEZ91JgEqFD65rnyP1sx8MrHcWAUjAdYoyn0ytRFn8XeYhfIWxEhYziuOJZmEGoo0Vuzw6IN5LbUTNNKit3aCNh/kndkLa6iBhJzanIqGVCuWD9ii+rHw3xzLwEZ7GsoGs+2RXIo7o2MVS0Gt2VUMy8Shbb2HUdzgtj2OeYEWe/UTDRzi0sa6a6vPvL4hywpeBvlE4nWgk1sdc0jqLkrRa6oYFQYl3T030Ym0Jdavny/8l/o+BZZmBgQ206Vl8a0ArXfMQCrxnMtKgARMpBxacv/oPFSswND/lkyYXYc+vJOdDKjaueMzpZihWHLEzdS8HdS3eF9vbp6cJf3/OkvGxigWWQP7OEw2yW2fJlNXg3pqVZxRjSUxbObQC4wCkZoMgU+NlHjjlHFmZm0glDbNyo4ekuMmdIb1zjlLQcTQVvzBOC/kHag29CWVztr6rF53Hi2CAsrq6BwdNYEryCkT2MWbQzPC647dKG1qvOO/0MRqI3P2F1b4HlbQUyS3V5LAR2e7d70CHuloDysgKfPcEldSYKcHj2q9Z3IyKTUEBgcjFsu5jMu5tY8JeoboCx5hG3rO2TdZFPR1TzG33Bwe4HoPft6vRHEMAAA="""     # noqa: E501
+
     def populate():
         # Create a new user
         user = User(email="user@example.org", username="user")
@@ -30,6 +32,7 @@ class BaseTestCase(TestCase):
             score=12345,
             turns=67890,
             owner=user,
+            build_code=BaseTestCase.example_build_code,
         )
         record.save()
 

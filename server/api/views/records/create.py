@@ -22,6 +22,7 @@ class CreateRecordView(TokenRequiredMixin, ExpectsJSONMixin, BaseAPIView):
             score=request.json.score,
             turns=request.json.turns,
             owner=request.user,
+            build_code=request.json.build_code,
         )
         record.save()
         return JsonResponse({"detail": "record created successfuly", "id": record.id})

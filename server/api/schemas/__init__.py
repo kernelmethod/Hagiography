@@ -5,4 +5,4 @@ from .journal import (  # noqa: F401
     JournalAccomplishmentsCreate,
     JournalAccomplishmentsList,
 )
-from .game_record import GameRecordCreate  # noqa: F401
+from .game_record import GameRecordCreate, GameRecordRetrieve  # noqa: F401

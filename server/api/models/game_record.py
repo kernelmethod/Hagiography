@@ -31,5 +31,7 @@ class GameRecord(models.Model):
     score = models.BigIntegerField(null=False)
     turns = models.BigIntegerField(null=False)
 
+    build_code = models.CharField(max_length=2048, null=True)
+
     class Meta:
         indexes = [models.Index(fields=["id"]), models.Index(fields=["created"])]

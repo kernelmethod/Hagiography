@@ -75,6 +75,7 @@ class CreateRecordTestCase(ApiClientTestCase):
         self.assertEqual(str(record.tile), self.game_record.tile)
         self.assertEqual(record.score, self.game_record.score)
         self.assertEqual(record.turns, self.game_record.turns)
+        self.assertEqual(record.build_code, self.game_record.build_code)
 
     def test_create_record_preauth(self):
         # Unauthenticated users, and users with invalid access tokens,
@@ -103,6 +104,7 @@ class RetrieveRecordTestCase(BaseTestCase):
         self.assertEqual(response.pop("score"), record.score)
         self.assertEqual(response.pop("turns"), record.turns)
         self.assertEqual(response.pop("owner"), record.owner.username)
+        self.assertEqual(response.pop("build_code"), record.build_code)
         created = datetime.fromtimestamp(response.pop("created"), tz=timezone.utc)
         now = datetime.now(timezone.utc)
         self.assertTrue(now - created < timedelta(seconds=10))
