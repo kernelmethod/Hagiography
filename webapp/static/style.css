@@ -142,8 +142,9 @@ main, footer {
 
 footer {
     width: 100%;
+    min-height: 200px;
     border-top: 2px dashed var(--qudcolor-y);
-    margin-top: 1rem;
+    margin-top: 2rem;
     padding-top: 1rem;
 }
 
