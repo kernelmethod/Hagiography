@@ -1,36 +1,21 @@
 <!-- Component summarizing a character's build -->
 
 <script>
+  import { parseBuildCode, SUBTYPE_MAP } from '$js/BuildCodes.jsx';
   import { onMount } from 'svelte';
+
+  import GameTile from '$components/GameTile.svelte';
 
   export let buildCode;
 
-  let buildCodePromise = null;
   let cyberneticsModule = null;
   let mutationsModule = null;
   let attributesModule = null;
   let subtypeModule = null;
 
-  async function parseBuildCode(buildCode) {
-    const ds = new DecompressionStream('gzip');
+  let subtype = null;
 
-    // Base64-decode build code and convert it into a byte array
-    const bcDecoded = atob(buildCode);
-    const bytes = new Uint8Array(bcDecoded.length);
-
-    for (let i = 0; i < bytes.length; i++) {
-      bytes[i] = bcDecoded.charCodeAt(i);
-    }
-
-    // Decompress blob and convert to JSON
-    const blob = new Blob([bytes]);
-    const decompressedStream = blob.stream().pipeThrough(ds);
-    const dCode = await new Response(decompressedStream).text();
-    const build = JSON.parse(dCode);
-
-    console.log(build);
-    return build;
-  }
+  let buildParsePromise = null;
 
   function getModule(build, moduleName) {
     for (let i = 0; i < build.modules.length; i++) {
@@ -42,10 +27,20 @@
     return null;
   }
 
-  const getCyberneticsModule = build => getModule(build, "XRL.CharacterBuilds.Qud.QudCyberneticsModule");
-  const getMutationsModule = build => getModule(build, "XRL.CharacterBuilds.Qud.QudMutationsModule");
-  const getAttributesModule = build => getModule(build, "XRL.CharacterBuilds.Qud.QudAttributesModule");
-  const getSubtypeModule = build => getModule(build, "XRL.CharacterBuilds.Qud.QudSubtypeModule");
+  async function getBuild() {
+    const build = await parseBuildCode(buildCode);
+    cyberneticsModule = build.getCyberneticsModule();
+    mutationsModule = build.getMutationsModule();
+    attributesModule = build.getAttributesModule();
+    subtypeModule = build.getSubtypeModule();
+
+    subtype = (SUBTYPE_MAP[subtypeModule.data.Subtype] || (() => null))();
+    return build;
+  }
+
+  onMount(() => {
+    buildParsePromise = getBuild();
+  });
 </script>
 
 <style>
@@ -85,16 +80,21 @@
   .attributes span {
     float: right;
   }
+
+  .subtype-tile {
+    height: 60%;
+  }
 </style>
 
-{#await parseBuildCode(buildCode) then build}
+{#if buildParsePromise !== null}
+{#await buildParsePromise then build}
 <div class="container build-summary">
   <div class="row row-cols-3">
     <!-- Attributes -->
     <div class="col">
       <div class="row build-summary-header">
         <div class="col-md-auto">
-          {#if (attributesModule = getAttributesModule(build)) !== null}
+          {#if attributesModule !== null}
           Attributes
           {:else}
           <span class="text-error">Error</span>
@@ -102,25 +102,32 @@
         </div>
         <div class="col"></div>
       </div>
-      {#if attributesModule !== null}
+      {#if attributesModule !== null && subtype !== null}
       <div class="attributes">
-        <p>Strength: <span>{attributesModule.data.PointsPurchased.Strength}</span></p>
-        <p>Agility: <span>{attributesModule.data.PointsPurchased.Agility}</span></p>
-        <p>Toughness: <span>{attributesModule.data.PointsPurchased.Toughness}</span></p>
-        <p>Intelligence: <span>{attributesModule.data.PointsPurchased.Intelligence}</span></p>
-        <p>Willpower: <span>{attributesModule.data.PointsPurchased.Willpower}</span></p>
-        <p>Ego: <span>{attributesModule.data.PointsPurchased.Ego}</span></p>
+        <p>Strength: <span>{attributesModule.data.PointsPurchased.Strength + subtype.Strength()}</span></p>
+        <p>Agility: <span>{attributesModule.data.PointsPurchased.Agility + subtype.Agility()}</span></p>
+        <p>Toughness: <span>{attributesModule.data.PointsPurchased.Toughness + subtype.Toughness()}</span></p>
+        <p>Intelligence: <span>{attributesModule.data.PointsPurchased.Intelligence + subtype.Intelligence()}</span></p>
+        <p>Willpower: <span>{attributesModule.data.PointsPurchased.Willpower + subtype.Willpower()}</span></p>
+        <p>Ego: <span>{attributesModule.data.PointsPurchased.Ego + subtype.Ego()}</span></p>
       </div>
       {/if}
     </div>
 
     <!-- Caste/calling -->
     <div class="col">
-      {#if (subtypeModule = getSubtypeModule(build)) !== null}
+      {#if subtypeModule !== null}
+      {#if subtype !== null}
+      <div class="text-center subtype-tile">
+        <GameTile --height2="60%" tile={subtype.getTile()} />
+      </div>
+      {:else}
+      <p class="text-error">Error: unknown subtype {subtypeModule.data.Subtype}</p>
+      {/if}
       <p>{subtypeModule.data.Subtype}</p>
       <p>{#if cyberneticsModule !== null}True Kin{:else}Mutated Human{/if}</p>
       {:else}
-      <p class="text-error">Error</p>
+      <p class="text-error">Error: could not find XRL.CharacterBuilds.Qud.QudSubtypeModule</p>
       {/if}
     </div>
 
@@ -128,9 +135,9 @@
     <div class="col">
       <div class="row build-summary-header">
         <div class="col-md-auto">
-          {#if (cyberneticsModule = getCyberneticsModule(build)) !== null}
+          {#if cyberneticsModule !== null}
           Cybernetics
-          {:else if (mutationsModule = getMutationsModule(build)) !== null}
+          {:else if mutationsModule !== null}
           Mutations
           {:else}
           <span class="text-error">Error</span>
@@ -151,3 +158,4 @@
   </div>
 </div>
 {/await}
+{/if}

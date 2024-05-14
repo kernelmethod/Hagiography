@@ -109,7 +109,13 @@
     Build
   </RecordHeading>
 
+  {#if record !== null}
+  {#if record.build_code !== undefined}
   <BuildSummary buildCode={record.build_code} />
+  {:else}
+  <p class="text-error">No build code was found for this game.</p>
+  {/if}
+  {/if}
 
   {#if buildCodeModal !== null}
   <p>
