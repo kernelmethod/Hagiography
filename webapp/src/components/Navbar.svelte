@@ -5,6 +5,7 @@
   import Spinner from '$components/Spinner.svelte';
 
   import { userInfo, fetcher } from '$js/Auth.jsx';
+  import { consoleMode } from '$js/Settings.jsx';
 
   let email = '';
   let password = '';
@@ -13,6 +14,7 @@
   let signupForm;
   let forgotPasswordForm;
   let logoutModal;
+  let settingsModal;
 
   let loginPromise = null;
   let logoutPromise = null;
@@ -128,10 +130,6 @@
     align-items: center;
   }
 
-  .btn-link {
-    color: var(--qudcolor-y);
-  }
-
   .modal-input {
     color: black;
   }
@@ -143,6 +141,19 @@
   /* Hide submit inputs */
   input[type=submit] {
     display: none;
+  }
+
+  /* Nav item styling */
+  .btn-link {
+    color: var(--qudcolor-y);
+  }
+
+  a.btn {
+    padding: 0;
+  }
+
+  .nav-item {
+    padding: 0 0.25em 0 0.25em;
   }
 </style>
 
@@ -165,9 +176,9 @@
 
       <div class="collapse navbar-collapse" id="navbarToggler">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <!-- Options for logged-out users -->
           {#if $userInfo !== null}
           {#if $userInfo.isLoggedIn()}
+          <!-- Options for logged-in users -->
           <li class="nav-item">
             <a href="/profile" class="btn">
               <button type="button" class="btn btn-dark">
@@ -181,6 +192,7 @@
             </button>
           </li>
           {:else}
+          <!-- Options for logged-out users -->
           <li class="nav-item">
             <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#loginModalToggle">
               Login
@@ -188,6 +200,11 @@
           </li>
           {/if}
           {/if}
+          <li class="nav-item">
+            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#settingsModalToggle">
+              Settings
+            </button>
+          </li>
         </ul>
       </div>
     </nav>
@@ -342,5 +359,21 @@
     </span>
     {/await}
     {/if}
+  </div>
+</Modal>
+
+<!-- Settings modal -->
+<Modal id="settingsModal" bind:this={settingsModal}>
+  <span slot="modalHeader">
+    Settings
+  </span>
+
+  <div slot="modalBody" class="container form-check">
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" value="" id="enableTilesCheckbox" checked>
+      <label for="enableTilesCheckbox" class="form-check-label">
+        Enable tiles
+      </label>
+    </div>
   </div>
 </Modal>

@@ -31,6 +31,8 @@
     --bg-color: #061c17;
     --static-scanline-zindex: 100;
 
+    --wide-modal-width: max(60vw, 500px);
+
     /*
      * Scanline animation configuration
      */

@@ -13,7 +13,7 @@ class UserInfo {
 }
 
 function getCookie(name) {
-  return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null;
+    return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null;
 }
 
 function getUserInfo() {
