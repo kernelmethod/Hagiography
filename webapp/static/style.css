@@ -26,7 +26,7 @@
      */
     --base-font-size: 1.5rem;
     --console-font-family: "Source Code Pro","Courier new", Courier, Monospace !important;
-    --table-highlight: #0b332a;
+    --highlight-color: #0b332a;
     --table-bg: var(--qudcolor-K);
     --bg-color: #061c17;
     --static-scanline-zindex: 100;
@@ -130,7 +130,7 @@ body {
 }
 
 main {
-    min-height: 60vh;
+    min-height: max(60vh, 600px);
 }
 
 main, footer {

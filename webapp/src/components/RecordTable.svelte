@@ -44,7 +44,7 @@
   }
 
   .record:hover {
-    background-color: var(--table-highlight);
+    background-color: var(--highlight-color);
     cursor: pointer;
   }
 

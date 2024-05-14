@@ -7,6 +7,8 @@
   export let text;
   export let snapshot;
 
+  let snapshotEl;
+
   let canvas;
   let snapshotPromise = null;
   let tiles = snapshot.split('|').map(parseTileSpec);
@@ -48,8 +50,18 @@
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
+  export const hide = () => new bootstrap.Collapse(snapshotEl).hide();
+  export const show = () => new bootstrap.Collapse(snapshotEl).show();
+  export const toggle = () => new bootstrap.Collapse(snapshotEl).toggle();
+
   onMount(() => {
-    snapshotPromise = drawSnapshot();
+    snapshotEl.addEventListener('show.bs.collapse', event => {
+      snapshotPromise = drawSnapshot();
+    });
+
+    snapshotEl.addEventListener('hidden.bs.collapse', event => {
+      snapshotPromise = null;
+    });
   });
 </script>
 
@@ -57,6 +69,8 @@
   canvas {
     image-rendering: pixelated;
     min-width: 400px;
+    padding: 0.5em;
+    border: 2px dotted white;
   }
 
   .snapshot {
@@ -68,17 +82,32 @@
   .entry-prefix {
     color: var(--qudcolor-K);
   }
+
+  button {
+    font-size: var(--bs-body-font-size);
+    width: 100%;
+    text-align: left;
+  }
+
+  button:hover {
+    background-color: var(--highlight-color);
+  }
 </style>
 
 <div>
   <p>
-    <span class="entry-prefix">$</span>
-    <ColorizedText text={text} bold={false} />
+    <button class="btn" on:click={toggle}>
+      <span class="entry-prefix">$</span>
+      <ColorizedText text={text} bold={false} />
+    </button>
   </p>
 
-  <div class="snapshot">
+  <div bind:this={snapshotEl} class="snapshot collapse">
+    {#if snapshotPromise !== null}
     {#await snapshotPromise then}
     {/await}
-    <canvas bind:this={canvas} width=144 height=120></canvas>
+    {/if}
+    <canvas bind:this={canvas} width=144 height=120>
+    </canvas>
   </div>
 </div>
