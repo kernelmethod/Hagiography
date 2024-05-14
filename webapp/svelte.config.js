@@ -24,6 +24,7 @@ export default {
             directives: {
                 'default-src': ['self'],
                 'style-src': ['self', 'unsafe-inline'],
+                'img-src': ['self', 'data:'],
             },
         }
     }
