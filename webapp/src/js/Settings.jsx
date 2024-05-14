@@ -10,7 +10,6 @@ function getEnableTilesStore() {
     const initialValue = (storedValue === null)
         ? true
         : (storedValue === '1');
-    console.log(initialValue);
     set(initialValue);
 
     return {

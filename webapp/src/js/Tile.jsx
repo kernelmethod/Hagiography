@@ -58,7 +58,7 @@ class Tile {
         }
     }
 
-    render(canvas, showBackground = true, enableTiles = false) {
+    render(canvas, showBackground = true, enableTiles = true) {
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => {
