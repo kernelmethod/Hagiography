@@ -1,6 +1,7 @@
 <script>
   import { onDestroy } from 'svelte';
   import { userInfo, fetcher } from '$js/Auth.jsx';
+  import ClipboardWidget from '$components/ClipboardWidget.svelte';
   import Modal from '$components/Modal.svelte';
   import Spinner from '$components/Spinner.svelte';
 
@@ -38,16 +39,6 @@
   }
 </script>
 
-<style>
-  .apikey {
-    background-color: black;
-    word-break: break-all;
-    padding: 1em;
-    margin-top: 1em;
-    margin-bottom: 1em;
-  }
-</style>
-
 <main>
   {#if $userInfo !== null}
   <h1>
@@ -80,9 +71,9 @@
     <p class="text-error">
       Do <b>NOT</b> share this key with anyone else!
     </p>
-    <div class="apikey">
+    <ClipboardWidget>
       {apikey}
-    </div>
+    </ClipboardWidget>
     <p>
       To use this key:
     </p>

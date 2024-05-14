@@ -75,8 +75,8 @@
 
   .snapshot {
     text-align: center;
-    margin-top: 2em;
-    margin-bottom: 2em;
+    margin: 2em 0 2em 0;
+    padding: 1em 0 1em 0;
   }
 
   .entry-prefix {

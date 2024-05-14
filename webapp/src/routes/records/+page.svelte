@@ -1,9 +1,11 @@
 <script>
   import { onMount } from "svelte";
   import ColorizedText from '$components/ColorizedText.svelte';
+  import ClipboardWidget from '$components/ClipboardWidget.svelte';
+  import DateTime from '$components/DateTime.svelte';
   import GameTileFromString from '$components/GameTileFromString.svelte';
   import Spinner from '$components/Spinner.svelte';
-  import DateTime from '$components/DateTime.svelte';
+  import Modal from '$components/Modal.svelte';
 
   import JournalEntry from '$components/record/JournalEntry.svelte';
   import RecordHeading from '$components/record/RecordHeading.svelte';
@@ -16,6 +18,7 @@
   let journalPromise = null;
 
   let recordId;
+  let buildCodeModal = null;
 
   async function fetchRecord() {
     await fetch('/api/records/id/' + recordId)
@@ -100,6 +103,13 @@
   <p><b>Score:</b> {record.score}</p>
   <p><b>Turns played:</b> {record.turns}</p>
   <p><b>Played on:</b> <DateTime timestamp="{record.created}" /></p>
+  {#if buildCodeModal !== null}
+  <p>
+    <button type="button" class="btn btn-primary" on:click={() => buildCodeModal.show()}>
+      Show build code
+    </button>
+  </p>
+  {/if}
   {:catch error}
   <h1 class="text-error">{error}</h1>
   {/await}
@@ -113,18 +123,32 @@
       Journal entries
     </RecordHeading>
   {#if journalEntries.length === 0}
-  <span class="fst-italic">
-    This game record had no journal entries.
-  </span>
+    <span class="fst-italic">
+      This game record had no journal entries.
+    </span>
   {:else}
   {#each journalEntries as e, _}
-  <JournalEntry text={e.text} snapshot={e.snapshot} />
+    <JournalEntry text={e.text} snapshot={e.snapshot} />
   {/each}
   {/if}
   {:catch error}
-  <h1>
-    No journal entries could be retrieved for this game record.
-  </h1>
+    <h1>
+      No journal entries could be retrieved for this game record.
+    </h1>
   {/await}
   {/if}
 </main>
+
+{#if record !== null}
+<Modal id="buildCodeModal" bind:this={buildCodeModal} --width="max(60vw, 500px)">
+  <div slot="modalHeader">
+    Build code
+  </div>
+
+  <div slot="modalBody">
+    <ClipboardWidget>
+      {record.build_code}
+    </ClipboardWidget>
+  </div>
+</Modal>
+{/if}
