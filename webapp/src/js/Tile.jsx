@@ -58,41 +58,42 @@ class Tile {
         }
     }
 
-    render(canvas, showBackground = true, consoleMode = false) {
+    render(canvas, showBackground = true, enableTiles = false) {
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => {
-                this._render(canvas, img, showBackground, consoleMode);
+                this._render(canvas, img, showBackground, enableTiles);
                 resolve(undefined);
             };
             img.onerror = reject;
 
-            if (!consoleMode)
+            if (enableTiles)
                 img.src = this.path;
             else
                 img.src = this.consoleTile();
         });
     }
 
-    _render(canvas, img, showBackground, consoleMode) {
+    _render(canvas, img, showBackground, enableTiles) {
         const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const primary = COLORMAP[this.fgColor()];
         const secondary = COLORMAP[this.detailColor];
         const bgColorStr = this.bgColor();
 
-        if (!consoleMode && this.hflip) {
+        if (enableTiles && this.hflip) {
             ctx.translate(canvas.width, 0);
             ctx.scale(-1, 1);
         }
-        if (!consoleMode && this.vflip) {
+        if (enableTiles && this.vflip) {
             ctx.translate(0, canvas.height);
             ctx.scale(1, -1);
         }
 
         ctx.drawImage(img, 0, 0);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = consoleMode
+        const data = (!enableTiles)
             ? this._colorImageConsoleMode(imageData.data, primary, secondary)
             : this._colorImage(imageData.data, primary, secondary);
 

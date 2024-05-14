@@ -3,20 +3,25 @@
   import { COLORMAP } from '$js/Color.jsx';
   import { ColorString } from '$js/Tile.jsx';
 
-  import { consoleMode } from '$js/Settings.jsx';
+  import { enableTiles } from '$js/Settings.jsx';
 
   let canvas = null;
   let renderPromise;
+  let _enableTiles = true;
 
   export let tile;
   export let showBackground = true;
 
-  onMount(() => {
-    const unsubscribe = consoleMode.subscribe((value) => {
+  const unsubscribe = enableTiles.subscribe((value) => {
+    _enableTiles = value;
+    if (canvas !== null)
       renderPromise = tile.render(canvas, showBackground, value);
-    });
+  });
 
-    onDestroy(unsubscribe);
+  onDestroy(unsubscribe);
+
+  onMount(() => {
+    renderPromise = tile.render(canvas, showBackground, _enableTiles);
   });
 </script>
 

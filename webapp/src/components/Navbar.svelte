@@ -5,7 +5,7 @@
   import Spinner from '$components/Spinner.svelte';
 
   import { userInfo, fetcher } from '$js/Auth.jsx';
-  import { consoleMode } from '$js/Settings.jsx';
+  import { enableTiles } from '$js/Settings.jsx';
 
   let email = '';
   let password = '';
@@ -18,6 +18,8 @@
 
   let loginPromise = null;
   let logoutPromise = null;
+
+  let enableTilesCheckbox;
 
   function loginButton() {
     loginForm.classList.add('was-validated');
@@ -104,6 +106,12 @@
     forgotPasswordForm.checkValidity();
     forgotPasswordForm.classList.add('was-validated');
   }
+
+  const unsubscribe = enableTiles.subscribe((value) => {
+    enableTilesCheckbox = value;
+  });
+
+  onDestroy(unsubscribe);
 </script>
 
 <style>
@@ -370,7 +378,9 @@
 
   <div slot="modalBody" class="container form-check">
     <div class="form-check">
-      <input type="checkbox" class="form-check-input" value="" id="enableTilesCheckbox" checked>
+      <input type="checkbox" class="form-check-input" id="enableTilesCheckbox"
+          bind:checked={enableTilesCheckbox}
+          on:change={() => enableTiles.toggle(enableTilesCheckbox)}>
       <label for="enableTilesCheckbox" class="form-check-label">
         Enable tiles
       </label>
