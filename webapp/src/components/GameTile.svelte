@@ -25,7 +25,7 @@
   });
 </script>
 
-<style>
+<style lang="postcss">
   canvas {
     height: var(--height, 100%);
     image-rendering: pixelated;

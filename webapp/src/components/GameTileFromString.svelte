@@ -8,7 +8,7 @@
   let tile = parseTileSpec(spec);
 </script>
 
-<style>
+<style lang="postcss">
   div {
     display: flex;
     align-items: center;

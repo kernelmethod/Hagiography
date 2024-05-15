@@ -33,18 +33,26 @@
   onMount(() => { listRecordsPromise = listRecords(); });
 </script>
 
-<style>
-  table {
-    font-size: calc(0.75 * var(--base-font-size));
+<style lang="postcss">
+  thead > tr {
+    background-color: white;
+    color: black;
+  }
+
+  th, td {
+    padding-left: 3em;
   }
 
   td {
     color: var(--qudcolor-y);
-    background: rgba(0, 0, 0, 0);
+  }
+
+  tr {
+    background: var(--bg-color);
   }
 
   .record:hover {
-    background-color: var(--highlight-color);
+    background: var(--highlight-color);
     cursor: pointer;
   }
 
@@ -58,60 +66,58 @@
     max-width: 400px;
     padding-left: 1rem;
   }
-
-  .multicol-text {
-    text-align: center;
-  }
 </style>
 
-<table class="table bg-body-tertiary border border-primary align-middle table-responsive">
-  <thead>
-    <tr>
-      <th scope="col">Game mode</th>
-      <th scope="col">Character</th>
-      <th scope="col">Score</th>
-      <th scope="col">Turns</th>
-      <th scope="col">Uploaded</th>
-    </tr>
-  </thead>
-  <tbody>
-    {#if waitingForRecords}
-    <!-- Records haven't been retrieved yet -->
-    <tr>
-      <td class="multicol-text" colspan="5">
-        <Spinner>
-          Loading game records...
-        </Spinner>
-      </td>
-    </tr>
-    {/if}
-    {#if listRecordsPromise !== null}
-    {#await listRecordsPromise then records}
-    {#if records.length === 0}
-    <tr>
-      <td class="multicol-text" colspan="5">
-        No records could be found at this time.
-      </td>
-    </tr>
-    {:else}
-    {#each records as r, _}
-    <tr on:click={() => visitRecord(r)} class="record">
-      <td>{r.game_mode}</td>
-      <td>
-        <div class="character-name">
-          <GameTileFromString --height="var(--base-font-size)" spec="{r.tile}" showBackground={false} />
-          <span class="d-inline-block text-truncate">
-            <ColorizedText text="{r.character_name}" />
-          </span>
-        </div>
-      </td>
-      <td>{r.score}</td>
-      <td>{r.turns}</td>
-      <td><DateTime timestamp="{r.created}" /></td>
-    </tr>
-    {/each}
-    {/if}
-    {/await}
-    {/if}
-  </tbody>
-</table>
+<div class="flex my-4 justify-center">
+  <table class="w-10/12 border-x border-b">
+    <thead class="text-left">
+      <tr>
+        <th scope="col">Game mode</th>
+        <th scope="col">Character</th>
+        <th scope="col">Score</th>
+        <th scope="col">Turns</th>
+        <th scope="col">Uploaded</th>
+      </tr>
+    </thead>
+    <tbody class="text-left">
+      {#if waitingForRecords}
+      <!-- Records haven't been retrieved yet -->
+      <tr>
+        <td class="text-center" colspan="5">
+          <Spinner>
+            Loading game records...
+          </Spinner>
+        </td>
+      </tr>
+      {/if}
+      {#if listRecordsPromise !== null}
+      {#await listRecordsPromise then records}
+      {#if records.length === 0}
+      <tr>
+        <td class="multicol-text" colspan="5">
+          No records could be found at this time.
+        </td>
+      </tr>
+      {:else}
+      {#each records as r, _}
+      <tr on:click={() => visitRecord(r)} class="record">
+        <td>{r.game_mode}</td>
+        <td>
+          <div class="character-name">
+            <GameTileFromString --height="var(--base-font-size)" spec="{r.tile}" showBackground={false} />
+            <span class="d-inline-block text-truncate">
+              <ColorizedText text="{r.character_name}" />
+            </span>
+          </div>
+        </td>
+        <td>{r.score}</td>
+        <td>{r.turns}</td>
+        <td><DateTime timestamp="{r.created}" /></td>
+      </tr>
+      {/each}
+      {/if}
+      {/await}
+      {/if}
+    </tbody>
+  </table>
+</div>

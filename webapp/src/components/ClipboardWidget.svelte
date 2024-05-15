@@ -14,7 +14,7 @@
   }
 </script>
 
-<style>
+<style lang="postcss">
   .clipboard-text {
     background-color: black;
     word-break: break-all;

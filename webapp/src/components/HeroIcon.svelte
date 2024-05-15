@@ -1,4 +1,4 @@
-<style>
+<style lang="postcss">
   img {
     height: var(--height, 100%);
     image-rendering: pixelated;

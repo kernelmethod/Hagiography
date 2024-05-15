@@ -1,39 +1,85 @@
 <script>
   export let id;
 
+  let visible = false;
   let modal;
 
-  export const hide = () => bootstrap.Modal.getInstance(modal).hide();
-  export const show = () => (new bootstrap.Modal(modal)).show();
+  export const show = () => (visible = true);
+  export const hide = () => modal.close();
+
+  $: if (modal && visible) modal.showModal();
 </script>
 
-<style>
-  .modal-dialog {
-    max-width: var(--width, var(--bs-modal-width));
+<style lang="postcss">
+  dialog {
+    background-color: var(--bg-color);
+    color: var(--qudcolor-y);
+    border-color: var(--qudcolor-y);
+    width: var(--width, 500px);
+  }
+
+  dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  dialog[open] {
+    animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  dialog[open]::backdrop {
+    animation: fade 0.2s ease-out;
+  }
+
+  @keyframes zoom {
+    from {
+      transform: scale(0.95);
+    }
+
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 </style>
 
-<div bind:this={modal} class="modal fade" id="{id}Toggle" tabindex="-1" aria-labelledby="{id}Label" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      {#if $$slots.modalHeader}
-      <div class="modal-header">
-        <span class="modal-title fs-5 fw-bold" id="{id}Label">
-          <slot name="modalHeader" />
-        </span>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      {/if}
-      <div class="modal-body">
-        <slot name="modalBody" />
-      </div>
-      {#if $$slots.modalFooter}
-      <div class="modal-footer">
-        <slot name="modalFooter" />
-      </div>
-      {/if}
+<dialog
+  class="mt-32 border-8"
+  bind:this={modal}
+  id="{id}Toggle"
+  aria-labelledby="{id}Label"
+  aria-hidden="true"
+  on:close={() => (visible = false)}
+  on:click|self={() => modal.close()}>
+
+  <div class="modal-content">
+    {#if $$slots.modalHeader}
+    <div class="border-b-4 border-inherit flex flex-row">
+      <span class="text-2xl m-2 font-bold" id="{id}Label">
+        <slot name="modalHeader" />
+      </span>
+      <div class="flex-auto"></div>
+      <button type="button" class="px-4" aria-label="Close" on:click={() => modal.close()}>
+        <i class="bi-x text-4xl"></i>
+      </button>
     </div>
+    {/if}
+    <div class="p-4">
+      <slot name="modalBody" />
+    </div>
+    {#if $$slots.modalFooter}
+    <div class="mt-2 border-t-4 border-inherit p-2">
+      <slot name="modalFooter" />
+    </div>
+    {/if}
   </div>
-</div>
 
-
+</dialog>

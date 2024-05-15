@@ -32,7 +32,7 @@
   });
 </script>
 
-<style>
+<style lang="postcss">
   span {
     font-family: var(--console-font-family);
   }

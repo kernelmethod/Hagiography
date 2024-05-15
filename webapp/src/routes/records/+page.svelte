@@ -58,7 +58,7 @@
   });
 </script>
 
-<style>
+<style lang="postcss">
   .headline {
     display: flex;
     align-items: flex-end;
@@ -89,7 +89,7 @@
   <div class="headline">
     <GameTileFromString --height="calc(6*var(--base-font-size))" spec="{record.tile}" showBackground={false} />
     <span class="character-name">
-      <h1>
+      <h1 class="text-3xl font-bold">
         <ColorizedText text="{record.character_name}" />
       </h1>
     </span>

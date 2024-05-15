@@ -1,27 +1,23 @@
-<style>
+<style lang="postcss">
   * {
     color: var(--qudcolor-W);
     font-style: italic;
   }
 
+  div {
+    align-items: center;
+    border-color: var(--qudcolor-W);
+  }
+
   hr {
     border: 2px solid var(--qudcolor-W);
   }
-
-  .row {
-    margin-top: 1em;
-    margin-bottom: 1em;
-  }
 </style>
 
-<div class="row">
-  <div class="col col-lg-1">
-    <hr>
-  </div>
-  <div class="col col-md-auto align-middle">
+<div class="flex flex-row my-4">
+  <div class="w-14 align-middle inline-block border-t-2"></div>
+  <div class="px-4 text-xl">
     <slot />
   </div>
-  <div class="col">
-    <hr>
-  </div>
+  <div class="flex-auto border-t-2"></div>
 </div>

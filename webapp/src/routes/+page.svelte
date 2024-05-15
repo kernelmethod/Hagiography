@@ -4,11 +4,13 @@
 </script>
 
 <main>
-  <div class="text-center mb-4">
+  <div class="flex justify-center">
     <HeroIcon --height="128px" />
-    <h2>
+  </div>
+  <div class="flex justify-center">
+    <h1 class="text-3xl underline">
       Welcome to <b>Hagiography</b>!
-    </h2>
+    </h1>
   </div>
 
   <p>Live and drink.</p>

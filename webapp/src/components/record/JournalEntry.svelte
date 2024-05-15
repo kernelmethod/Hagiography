@@ -29,7 +29,7 @@
   });
 </script>
 
-<style>
+<style lang="postcss">
   .snapshot {
     text-align: center;
     margin: 2em 0 2em 0;

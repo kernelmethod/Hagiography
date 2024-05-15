@@ -41,16 +41,6 @@
     --scanline-opacity: 0.75;
     --scanline-fps: 32;
     --scanline-z-index: 3000;
-
-    /* Bootstrap variables */
-    --bs-primary: var(--qudcolor-y);
-    --bs-body-color: var(--qudcolor-y);
-    --bs-body-font-size: var(--base-font-size);
-    --bs-body-font-family: var(--console-font-family);
-    --bs-tertiary-bg-rgb: 6,28,23;
-    --bs-emphasis-color-rgb: 119,191,207;
-    --bs-primary-rgb: 193,211,214;
-    --bs-table-color: var(--qudcolor-y);
 }
 
 .navbar {
@@ -152,10 +142,6 @@ article {
     padding: 2rem 2rem 0 2rem;
 }
 
-h1, h2, h3 {
-    text-decoration: underline;
-}
-
 /* Colors for Qud shaders */    
 .qudcolor-r {
     color: var(--qudcolor-r);
@@ -249,13 +235,6 @@ h1, h2, h3 {
 /* Modals */
 .modal {
     --bs-modal-zindex: 5000;
-}
-
-.modal-content {
-    color: var(--qudcolor-y);
-    background-color: var(--bg-color);
-    border: 0.5rem solid var(--qudcolor-y);
-    border-radius: 0;
 }
 
 .modal-backdrop.show {

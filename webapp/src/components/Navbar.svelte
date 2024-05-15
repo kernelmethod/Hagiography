@@ -62,7 +62,7 @@
 
     // Sleep for a short period before closing the login modal
     return () => new Promise(resolve => {
-      setTimeout(() => { loginModal.hide(); }, 500);
+      setTimeout(() => { console.log('closing login modal'); loginModal.hide(); }, 500);
     });
   }
 
@@ -93,7 +93,7 @@
       });
 
     return () => new Promise(resolve => {
-      setTimeout(() => { logoutModal.hide(); }, 750);
+      setTimeout(() => { console.log('hiding modal'); logoutModal.hide(); }, 750);
     });
   }
 
@@ -114,7 +114,7 @@
   onDestroy(unsubscribe);
 </script>
 
-<style>
+<style lang="postcss">
   .nav-background {
     background-color: black;
     width: 100%;
@@ -123,9 +123,12 @@
   }
 
   nav {
-    background-color: black;
     width: 100%;
-    padding: 0;
+    color: var(--qudcolor-c);
+  }
+
+  .nav-item {
+    @import 'flex';
   }
 
   .navbar-brand > div {
@@ -153,70 +156,60 @@
 
   /* Nav item styling */
   .btn-link {
-    color: var(--qudcolor-y);
+    color: var(--qudcolor-C);
   }
 
   a.btn {
     padding: 0;
   }
-
-  .nav-item {
-    padding: 0 0.25em 0 0.25em;
-  }
 </style>
 
 <div class="nav-background">
-  <div class="container">
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-          <div>
-            <HeroIcon --height="calc(1.25 * var(--bs-navbar-brand-font-size))" />
-            <span class="d-inline-block p-2">
-              <b>Hagiography</b>
-            </span>
-          </div>
-        </a>
+  <nav class="flex flex-row container mx-auto py-2">
+    <a href="/">
+      <div class="flex flex-row items-stretch">
+        <HeroIcon --height="64px" />
+        <div class="px-2 flex flex-col justify-center items-center">
+          <span class="text-3xl font-bold">Hagiography</span>
+        </div>
       </div>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    </a>
 
-      <div class="collapse navbar-collapse" id="navbarToggler">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          {#if $userInfo !== null}
-          {#if $userInfo.isLoggedIn()}
-          <!-- Options for logged-in users -->
-          <li class="nav-item">
-            <a href="/profile" class="btn">
-              <button type="button" class="btn btn-dark">
-                Profile
-              </button>
-            </a>
-          </li>
-          <li class="nav-item">
-            <button type="button" class="btn btn-dark" on:click={() => logoutPromise = attemptLogout()}>
-              Logout
-            </button>
-          </li>
-          {:else}
-          <!-- Options for logged-out users -->
-          <li class="nav-item">
-            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#loginModalToggle">
-              Login
-            </button>
-          </li>
-          {/if}
-          {/if}
-          <li class="nav-item">
-            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#settingsModalToggle">
-              Settings
-            </button>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </div>
+    <div class="flex-auto"></div>
+
+    {#if $userInfo !== null}
+    {#if $userInfo.isLoggedIn()}
+    <!-- Options for logged-in users -->
+    <div class="flex flex-col justify-center items-center text-xl px-2">
+      <a href="/profile">
+        <button type="button">
+          Profile
+        </button>
+      </a>
+    </div>
+
+    <div class="flex flex-col justify-center items-center text-xl px-2">
+      <button type="button" on:click={() => (logoutPromise = attemptLogout())} >
+        Logout
+      </button>
+    </div>
+    {:else}
+    <!-- Options for logged-out users -->
+    <div class="flex flex-col justify-center items-center text-xl px-2">
+      <button type="button" on:click={() => loginModal.show()}>
+        Login
+      </button>
+    </div>
+    {/if}
+    {/if}
+
+    <div class="flex flex-col justify-center items-center text-xl px-2">
+      <button type="button" on:click={() => settingsModal.show()}>
+        Settings
+      </button>
+    </div>
+
+  </nav>
 </div>
 
 <!-- Login modal -->
@@ -228,18 +221,18 @@
   <div slot="modalBody">
     <form bind:this={loginForm} on:submit|preventDefault={loginButton} class="needs-validation" novalidate>
       <div class="mb-3">
-        <label for="email" class="col-form-label">Email:</label>
+        <label for="email" class="col-form-label font-bold">Email:</label>
         <div class="input-group has-validation">
-          <input bind:value={email} type="text" class="form-control modal-input" id="email" required>
+          <input bind:value={email} type="text" class="form-control modal-input w-9/12 rounded-sm" id="email" required>
           <div class="invalid-feedback">
             Please enter your email address
           </div>
         </div>
       </div>
       <div class="mb-3">
-        <label for="message-text" class="col-form-label">Password:</label>
+        <label for="message-text" class="col-form-label font-bold">Password:</label>
         <div class="input-group has-validation">
-          <input bind:value={password} type="password" class="form-control modal-input" id="password" required>
+          <input bind:value={password} type="password" class="form-control modal-input w-9/12 rounded-sm" id="password" required>
           <div class="invalid-feedback">
             Please enter your password
           </div>
@@ -268,12 +261,12 @@
       </div>
     {/if}
 
-    <button class="btn btn-link" data-bs-target="#forgotPasswordModalToggle" data-bs-toggle="modal">
-      I forgot my password
-    </button>
-    <button class="btn btn-link" data-bs-target="#signupModalToggle" data-bs-toggle="modal">
-      Create a new account
-    </button>
+    <div class="grid grid-flow-col">
+      <div>
+        <button class="btn-link">I forgot my password</button>
+        <button class="btn-link">Create a new account</button>
+      </div>
+    </div>
   </div>
 
   <div slot="modalFooter">

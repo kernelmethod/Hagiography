@@ -1,4 +1,4 @@
-<style>
+<style lang="postcss">
 .loader {
   height: var(--size, 48px);
   width: var(--size, 48px);
@@ -51,6 +51,10 @@
   100% {
     transform: rotate(-360deg);
   }
+}
+
+span {
+  display: none;
 }
 </style>
 

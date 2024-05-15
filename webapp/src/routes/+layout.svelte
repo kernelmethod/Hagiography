@@ -1,22 +1,18 @@
 <script>
-  import bootstrapCss from 'bootstrap/dist/css/bootstrap.min.css?url';
-  import bootstrapSrc from 'bootstrap/dist/js/bootstrap.min.js?url';
+  import '../app.css';
   import 'bootstrap-icons/font/bootstrap-icons.min.css';
 
   import Navbar from "$components/Navbar.svelte";
 </script>
 
-<svelte:head>
-  <link rel="stylesheet" href={bootstrapCss}>
-  <script src={bootstrapSrc}></script>
-</svelte:head>
-
 <Navbar />
 
-<div class="container">
-  <slot />
+<div class="flex justify-center">
+  <div class="container">
+    <slot />
 
-  <footer>
-    <a href="/about">About</a>
-  </footer>
+    <footer>
+      <a href="/about">About</a>
+    </footer>
+  </div>
 </div>

@@ -60,7 +60,7 @@
   onDestroy(unsubscribe);
 </script>
 
-<style>
+<style lang="postcss">
   canvas {
     image-rendering: pixelated;
     min-width: 400px;

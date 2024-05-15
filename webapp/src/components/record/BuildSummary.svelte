@@ -44,7 +44,7 @@
   });
 </script>
 
-<style>
+<style lang="postcss">
   .build-summary-header {
     color: var(--qudcolor-W);
   }
@@ -90,18 +90,18 @@
 {#if buildParsePromise !== null}
 {#await buildParsePromise then build}
 <div class="container build-summary">
-  <div class="row row-cols-3">
+  <div class="grid grid-cols-3">
     <!-- Attributes -->
-    <div class="col">
-      <div class="row build-summary-header">
-        <div class="col-md-auto">
+    <div>
+      <div class="flex flex-row build-summary-header">
+        <div class="px-2 text-lg">
           {#if attributesModule !== null}
           Attributes
           {:else}
           <span class="text-error">Error</span>
           {/if}
         </div>
-        <div class="col"></div>
+        <div class="flex-auto"></div>
       </div>
       {#if attributesModule !== null && subtype !== null}
       <div class="attributes">
@@ -116,10 +116,10 @@
     </div>
 
     <!-- Caste/calling -->
-    <div class="col">
+    <div class="px-8">
       {#if subtypeModule !== null}
       {#if subtype !== null}
-      <div class="text-center subtype-tile">
+      <div class="flex justify-center subtype-tile">
         <GameTile --height2="60%" tile={subtype.getTile()} />
       </div>
       {:else}
@@ -133,9 +133,9 @@
     </div>
 
     <!-- Mutations/cybernetics -->
-    <div class="col">
-      <div class="row build-summary-header">
-        <div class="col-md-auto">
+    <div>
+      <div class="flex flex-row build-summary-header">
+        <div class="px-2 text-lg">
           {#if cyberneticsModule !== null}
           Cybernetics
           {:else if mutationsModule !== null}
@@ -144,7 +144,7 @@
           <span class="text-error">Error</span>
           {/if}
         </div>
-        <div class="col"></div>
+        <div class="flex-auto"></div>
       </div>
       {#if cyberneticsModule !== null}
       {#each cyberneticsModule.data.selections as cyb, _}
