@@ -59,13 +59,6 @@
 </script>
 
 <style lang="postcss">
-  .headline {
-    display: flex;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-  }
-
   .character-name {
     display: inline-block;
     padding-left: 1rem;
@@ -86,13 +79,15 @@
   {/if}
   {#if recordPromise !== null}
   {#await recordPromise then}
-  <div class="headline">
-    <GameTileFromString --height="calc(6*var(--base-font-size))" spec="{record.tile}" showBackground={false} />
-    <span class="character-name">
-      <h1 class="text-3xl font-bold">
+  <div class="flex flex-row mb-4">
+    <div>
+      <GameTileFromString --height="128px" spec="{record.tile}" showBackground={false} />
+    </div>
+    <div>
+      <div class="flex flex-col justify-center items-center text-5xl font-bold ml-8" style="height: 100%;">
         <ColorizedText text="{record.character_name}" />
-      </h1>
-    </span>
+      </div>
+    </div>
   </div>
 
   <p><b>Game mode:</b> {record.game_mode}</p>
