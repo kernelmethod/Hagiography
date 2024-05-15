@@ -1,6 +1,7 @@
 <script>
   import bootstrapCss from 'bootstrap/dist/css/bootstrap.min.css?url';
   import bootstrapSrc from 'bootstrap/dist/js/bootstrap.min.js?url';
+  import 'bootstrap-icons/font/bootstrap-icons.min.css';
 
   import Navbar from "$components/Navbar.svelte";
 </script>
