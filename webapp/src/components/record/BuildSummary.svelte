@@ -1,9 +1,10 @@
 <!-- Component summarizing a character's build -->
 
 <script>
-  import { parseBuildCode, SUBTYPE_MAP } from '$js/BuildCodes.jsx';
+  import { parseBuildCode, CYBERNETIC_MAP, SUBTYPE_MAP } from '$js/BuildCodes.jsx';
   import { onMount } from 'svelte';
 
+  import ColorizedText from '$components/ColorizedText.svelte';
   import GameTile from '$components/GameTile.svelte';
 
   export let buildCode;
@@ -147,7 +148,15 @@
       </div>
       {#if cyberneticsModule !== null}
       {#each cyberneticsModule.data.selections as cyb, _}
-      <p>{cyb.Cybernetic}</p>
+        {#if CYBERNETIC_MAP[cyb.Cybernetic] !== undefined}
+        <p>
+          <ColorizedText text={CYBERNETIC_MAP[cyb.Cybernetic]} />
+        </p>
+        {:else}
+        <p class="text-error">
+          Unknown cybernetic {cyb.Cybernetic}
+        </p>
+        {/if}
       {/each}
       {:else if mutationsModule !== null}
       {#each mutationsModule.data.selections as mut, _}

@@ -60,6 +60,24 @@ const SUBTYPE_MAP = {
     'Watervine Farmer': () => new Subtype({Toughness: 2}, 'creatures/caste_24.bmp', 'y'),
 };
 
+// Mapping of cybernetic ids to their true names
+const CYBERNETIC_MAP = {
+    'BiologicalIndexer': '{{Y|optical bioscanner}}',
+    'TechnologicalIndexer': '{{Y|optical technoscanner}}',
+    'CherubicVisage': '{{Y|cherubic visage}}',
+    'DermalInsulation': '{{Y|dermal insulation}}',
+    'HyperElasticAnkleTendons': '{{Y|hyper-elastic ankle tendons}}',
+    'ParabolicMuscularSubroutine': '{{Y|parabolic muscular subroutine}}',
+    'TranslucentSkin': '{{Y|translucent skin}}',
+    'StabilizerArmLocks': '{{Y|stabilizer arm locks}}',
+    'RapidReleaseFingerFlexors': '{{Y|rapid release finger flexors}}',
+    'CarbideHandBones': '{{Y|carbide hand bones}}',
+    'Pentaceps': '{{Y|pentaceps}}',
+    'InflatableAxons': '{{Y|inflatable axons}}',
+    'NocturnalApex': '{{Y|nocturnal apex}}',
+    'AirCurrentMicrosensor': '{{Y|air current microsensor}}',
+};
+
 class Build {
     constructor(buildJson) {
         this._buildJson = buildJson;
@@ -116,6 +134,7 @@ async function parseBuildCode(buildCode) {
 export {
     Build,
     Subtype,
+    CYBERNETIC_MAP,
     SUBTYPE_MAP,
     parseBuildCode,
 };
