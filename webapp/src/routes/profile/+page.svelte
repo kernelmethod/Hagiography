@@ -77,7 +77,7 @@
     <p>
       To use this key:
     </p>
-    <ul>
+    <ul class="list-disc ml-6">
       <li>Install the Hagiography mod, if you haven't already.</li>
       <li>Start Caves of Qud and go to the options menu.</li>
       <li>Under the "Hagiography" options, click "enter token for Hagiography".</li>
