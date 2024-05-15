@@ -10,17 +10,21 @@ class Tile {
         hflip = false,
         vflip = false
     ) {
-        // Some older tiles have their paths prefixed with Assets_Content_Textures
-        path = path.toLowerCase();
-        let result = /^assets_content_textures_([a-zA-Z0-9\-]*)_(.*)$/.exec(path);
-        if (result !== null) {
-            this.path = '/textures/' + result[1] + '/' + result[2];
+        if (path !== '') {
+            // Some older tiles have their paths prefixed with Assets_Content_Textures
+            path = path.toLowerCase();
+            let result = /^assets_content_textures_([a-zA-Z0-9\-]*)_(.*)$/.exec(path);
+            if (result !== null) {
+                this.path = '/textures/' + result[1] + '/' + result[2];
+            }
+            else {
+                this.path = '/textures/' + path;
+            }
         }
         else {
-            this.path = '/textures/' + path;
+            this.path = null;
         }
 
-        this.path = this.path.toLowerCase();
         this.renderString = renderString;
         this.colorString = new ColorString(colorString);
         this.detailColor = detailColor;
@@ -67,10 +71,12 @@ class Tile {
             };
             img.onerror = reject;
 
-            if (enableTiles)
+            if (enableTiles && this.path !== null)
                 img.src = this.path;
-            else
+            else {
+                enableTiles = false;
                 img.src = this.consoleTile();
+            }
         });
     }
 

@@ -37,7 +37,7 @@
         ctx.drawImage(subcanvas, cornerX, cornerY);
       }
       catch (e) {
-        console.log(`snapshot render error: {e}`);
+        console.log(`snapshot render error: ${e}`);
       }
     }
 
