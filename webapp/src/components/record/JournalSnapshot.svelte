@@ -9,6 +9,8 @@
   let snapshotPromise = null;
   let _enableTiles = true;
 
+  let exitPromise = null;
+
   async function drawSnapshot() {
     let subcanvases = [];
     let promises = [];
@@ -63,9 +65,6 @@
 <style lang="postcss">
   canvas {
     image-rendering: pixelated;
-    min-width: 400px;
-    padding: 0.5em;
-    border: 2px dotted white;
   }
 </style>
 
@@ -73,5 +72,11 @@
 {#await snapshotPromise then}
 {/await}
 {/if}
-<canvas bind:this={canvas} width=144 height=120>
+<canvas
+  bind:this={canvas}
+  width=144
+  height=120
+  class:opacity-0={snapshotPromise === null}
+  class:opacity-100={snapshotPromise !== null}
+  class="min-w-96 h-full p-2 block border-2 border-dotted transition-opacity duration-500">
 </canvas>

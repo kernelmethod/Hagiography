@@ -9,31 +9,29 @@
   export let snapshot;
 
   let snapshotEl;
-  let collapsed = true;
+  let expanded = false;
+  const collapsibleId = crypto.randomUUID();
 
   let snapshotPromise = null;
   let tiles = snapshot.split('|').map(parseTileSpec);
 
-  export const hide = () => new bootstrap.Collapse(snapshotEl).hide();
-  export const show = () => new bootstrap.Collapse(snapshotEl).show();
-  export const toggle = () => new bootstrap.Collapse(snapshotEl).toggle();
-
-  onMount(() => {
-    snapshotEl.addEventListener('show.bs.collapse', event => {
-      collapsed = false;
-    });
-
-    snapshotEl.addEventListener('hidden.bs.collapse', event => {
-      collapsed = true;
-    });
-  });
+  export const hide = () => (expanded = false)
+  export const show = () => (expanded = true)
+  export const toggle = () => (expanded = !expanded)
 </script>
 
 <style lang="postcss">
-  .snapshot {
-    text-align: center;
-    margin: 2em 0 2em 0;
-    padding: 1em 0 1em 0;
+  .collapsed {
+    margin-top: -100%;
+    transition: margin 0.25s ease-in;
+    transition-delay: 0s;
+  }
+
+  .expanded {
+    margin-top: 0;
+    transition: margin 1s ease-out;
+    transition-duration: 2s;
+    transition-delay: -2s;
   }
 
   .entry-prefix {
@@ -53,19 +51,27 @@
 
 <div>
   <p>
-    <button class="btn" on:click={toggle}>
+    <button aria-label="Expand entry" aria-controls={collapsibleId} aria-expanded={expanded} class="p-2 rounded-sm" on:click={toggle}>
       <span class="entry-prefix">$</span>
       <ColorizedText text={text} bold={false} />
     </button>
   </p>
 
-  <div bind:this={snapshotEl} class="snapshot collapse">
-    {#if !collapsed}
-    <!--
-      Conditionally render snapshot to preserve memory and reduce compute when snapshots
-      have to be updated.
-    -->
-    <JournalSnapshot tiles={tiles} />
-    {/if}
+  <div class="overflow-hidden">
+    <div id={collapsibleId}
+      bind:this={snapshotEl}
+      class="text-center py-8"
+      class:expanded={expanded}
+      class:collapsed={!expanded}>
+      <div class="flex flex-row justify-center min-h-96">
+        {#if expanded}
+        <!--
+          Conditionally render snapshot to preserve memory and reduce compute when snapshots
+          have to be updated.
+        -->
+        <JournalSnapshot tiles={tiles} />
+        {/if}
+      </div>
+    </div>
   </div>
 </div>
