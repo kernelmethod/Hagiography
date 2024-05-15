@@ -19,10 +19,16 @@ COPY ./deploy/webserver/docker-entrypoint.sh /usr/local/bin
 RUN chmod a+x /usr/local/bin/docker-entrypoint.sh
 
 WORKDIR "${APP_DIR}"
-COPY --chown="$USER_UID:$USER_UID" webapp/ "${APP_DIR}"
 USER "${USER_USERNAME}"
-RUN yarn \
-    && yarn build \
+
+# Install dependencies
+COPY --chown="$USER_UID:$USER_UID" webapp/yarn.lock .
+COPY --chown="$USER_UID:$USER_UID" webapp/package.json .
+RUN yarn
+
+# Build site
+COPY --chown="$USER_UID:$USER_UID" webapp .
+RUN yarn build \
     && mv build/* /srv \
     && chown -R "${USER_UID}:${USER_UID}" /srv
 
