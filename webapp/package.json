@@ -16,6 +16,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/adapter-static": "^3.0.1"
+		"@popperjs/core": "^2.11.8",
+		"@sveltejs/adapter-static": "^3.0.1",
+		"bootstrap": "5.3.3"
 	}
 }
