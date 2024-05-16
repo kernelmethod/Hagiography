@@ -7,34 +7,26 @@
 
   let textSpan;
   let renderError = null;
-  let classes = [];
 
-  if (bold)
-    classes.push("fw-bold");
+  const colorizedFragments = [];
 
-  classes = classes.join(" ");
-
-  onMount(() => {
-    try {
-      let fragments = parseTextColorization(text);
-      for (const fragment of fragments) {
-        for (const colorizedText of fragment.getColorizedFragments()) {
-          let childSpan = document.createElement('span');
-          childSpan.classList.add(colorizedText.colorClass);
-          childSpan.innerText = colorizedText.text;
-          textSpan.appendChild(childSpan);
-        }
+  try {
+    const fragments = parseTextColorization(text);
+    for (const fragment of fragments) {
+      for (const colorizedText of fragment.getColorizedFragments()) {
+        colorizedFragments.push(colorizedText);
       }
     }
-    catch (error) {
-      renderError = error;
-    }
-  });
+  }
+  catch (error) {
+    renderError = error;
+  }
 </script>
 
 <style lang="postcss">
   span {
     font-family: var(--console-font-family);
+    display: block;
   }
 
   .render-error {
@@ -44,7 +36,13 @@
 </style>
 
 {#if renderError === null}
-<span class="{classes}" bind:this={textSpan}></span>
+<span class:font-bold={bold} bind:this={textSpan}>
+  {#each colorizedFragments as fragment, _}
+  <span class="{fragment.colorClass} block">
+    {fragment.text}
+  </span>
+  {/each}
+</span>
 {:else}
 <span class="render-error">
   {renderError}
