@@ -1,7 +1,9 @@
 <script>
-  let visible = false;
+  export let visible = false;
+
   let modal;
-  const id = crypto.randomUUID();
+
+  export const id = crypto.randomUUID();
 
   export const show = () => (visible = true);
   export const hide = () => modal.close();
