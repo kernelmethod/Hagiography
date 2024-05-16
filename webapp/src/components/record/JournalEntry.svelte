@@ -42,11 +42,13 @@
     <button
       aria-label="Expand entry"
       aria-controls={(journalEntryModal !== null) ? journalEntryModal.id : undefined}
-      class="p-2 rounded-sm"
+      class="p-2 rounded-sm flex flex-row"
       on:click={show}>
 
       <span class="entry-prefix">$</span>
-      <ColorizedText text={text} bold={false} />
+      <div class="pl-2">
+        <ColorizedText text={text} bold={false} />
+      </div>
     </button>
   </p>
 </div>
