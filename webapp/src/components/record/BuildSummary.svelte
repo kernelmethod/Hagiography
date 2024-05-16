@@ -4,6 +4,7 @@
   import { parseBuildCode, CYBERNETIC_MAP, SUBTYPE_MAP } from '$js/BuildCodes.jsx';
   import { onMount } from 'svelte';
 
+  import BuildSummaryInternalHeader from '$components/record/BuildSummaryInternalHeader.svelte';
   import ColorizedText from '$components/ColorizedText.svelte';
   import GameTile from '$components/GameTile.svelte';
 
@@ -45,31 +46,6 @@
 </script>
 
 <style lang="postcss">
-  .build-summary-header {
-    color: var(--qudcolor-W);
-  }
-
-  .build-summary {
-    margin-bottom: 2em;
-  }
-
-  .build-summary-header {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 1em;
-
-    border-style: solid;
-    border-width: 0 3px 0 3px;
-    border-color: var(--qudcolor-K);
-  }
-
-  .build-summary-header > div:nth-of-type(2) {
-    border-width: 3px 3px 0 0;
-    border-color: var(--qudcolor-K);
-    border-style: solid;
-  }
-
   p {
     margin: 0;
   }
@@ -86,21 +62,18 @@
 {#if buildParsePromise !== null}
 {#await buildParsePromise then build}
 <div class="container build-summary">
-  <div class="grid grid-cols-3">
+  <div class="grid max-lg:grid-cols-2 max-lg:grid-rows-2 lg:grid-cols-3 border-inherit">
     <!-- Attributes -->
-    <div>
-      <div class="flex flex-row build-summary-header">
-        <div class="px-2 text-lg">
-          {#if attributesModule !== null}
-          Attributes
-          {:else}
-          <span class="text-error">Error</span>
-          {/if}
-        </div>
-        <div class="flex-auto"></div>
-      </div>
+    <div class="max-lg:row-start-2 col-span-1 px-2">
+      <BuildSummaryInternalHeader>
+        {#if attributesModule !== null}
+        Attributes
+        {:else}
+        <span class="text-error">Error</span>
+        {/if}
+      </BuildSummaryInternalHeader>
       {#if attributesModule !== null && subtype !== null}
-      <div class="attributes">
+      <div class="attributes px-2">
         <p>Strength: <span>{attributesModule.data.PointsPurchased.Strength + subtype.Strength()}</span></p>
         <p>Agility: <span>{attributesModule.data.PointsPurchased.Agility + subtype.Agility()}</span></p>
         <p>Toughness: <span>{attributesModule.data.PointsPurchased.Toughness + subtype.Toughness()}</span></p>
@@ -112,7 +85,7 @@
     </div>
 
     <!-- Caste/calling -->
-    <div class="px-8">
+    <div class="max-lg:row-start-1 max-lg:col-span-2 max-lg:border-0">
       {#if subtypeModule !== null}
       {#if subtype !== null}
       <div class="flex justify-center subtype-tile">
@@ -121,44 +94,45 @@
       {:else}
       <p class="text-error">Error: unknown subtype {subtypeModule.data.Subtype}</p>
       {/if}
-      <p>{subtypeModule.data.Subtype}</p>
-      <p>{#if cyberneticsModule !== null}True Kin{:else}Mutated Human{/if}</p>
+      <div class="text-center">
+        <p>{subtypeModule.data.Subtype}</p>
+        <p>{#if cyberneticsModule !== null}True Kin{:else}Mutated Human{/if}</p>
+      </div>
       {:else}
       <p class="text-error">Error: could not find XRL.CharacterBuilds.Qud.QudSubtypeModule</p>
       {/if}
     </div>
 
     <!-- Mutations/cybernetics -->
-    <div>
-      <div class="flex flex-row build-summary-header">
-        <div class="px-2 text-lg">
-          {#if cyberneticsModule !== null}
-          Cybernetics
-          {:else if mutationsModule !== null}
-          Mutations
-          {:else}
-          <span class="text-error">Error</span>
-          {/if}
-        </div>
-        <div class="flex-auto"></div>
-      </div>
-      {#if cyberneticsModule !== null}
-      {#each cyberneticsModule.data.selections as cyb, _}
-        {#if CYBERNETIC_MAP[cyb.Cybernetic] !== undefined}
-        <p>
-          <ColorizedText text={CYBERNETIC_MAP[cyb.Cybernetic]} />
-        </p>
+    <div class="max-lg:row-start-2 max-lg:border-l-2 col-span-1 border-qudcolor-K px-2">
+      <BuildSummaryInternalHeader>
+        {#if cyberneticsModule !== null}
+        Cybernetics
+        {:else if mutationsModule !== null}
+        Mutations
         {:else}
-        <p class="text-error">
-          Unknown cybernetic {cyb.Cybernetic}
-        </p>
+        <span class="text-error">Error</span>
         {/if}
-      {/each}
-      {:else if mutationsModule !== null}
-      {#each mutationsModule.data.selections as mut, _}
-      <p>{mut.Mutation} {#if mut.Count > 1} x{mut.Count}{/if}</p>
-      {/each}
-      {/if}
+      </BuildSummaryInternalHeader>
+      <div class="px-2">
+        {#if cyberneticsModule !== null}
+        {#each cyberneticsModule.data.selections as cyb, _}
+          {#if CYBERNETIC_MAP[cyb.Cybernetic] !== undefined}
+          <p>
+            <ColorizedText text={CYBERNETIC_MAP[cyb.Cybernetic]} />
+          </p>
+          {:else}
+          <p class="text-error">
+            Unknown cybernetic {cyb.Cybernetic}
+          </p>
+          {/if}
+        {/each}
+        {:else if mutationsModule !== null}
+        {#each mutationsModule.data.selections as mut, _}
+        <p>{mut.Mutation} {#if mut.Count > 1} x{mut.Count}{/if}</p>
+        {/each}
+        {/if}
+      </div>
     </div>
   </div>
 </div>
