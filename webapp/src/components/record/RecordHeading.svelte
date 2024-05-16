@@ -8,10 +8,6 @@
     align-items: center;
     border-color: var(--qudcolor-W);
   }
-
-  hr {
-    border: 2px solid var(--qudcolor-W);
-  }
 </style>
 
 <div class="flex flex-row my-4">

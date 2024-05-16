@@ -132,26 +132,8 @@
     text-decoration: none;
   }
 
-  .nav-item {
-    @import 'flex';
-  }
-
-  .navbar-brand > div {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  ul {
-    align-items: center;
-  }
-
   .modal-input {
     color: black;
-  }
-
-  .btn-dark {
-    --bs-btn-color: var(--qudcolor-y);
   }
 
   /* Hide submit inputs */
@@ -162,10 +144,6 @@
   /* Nav item styling */
   .btn-link {
     color: var(--qudcolor-C);
-  }
-
-  a.btn {
-    padding: 0;
   }
 </style>
 

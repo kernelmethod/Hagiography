@@ -59,11 +59,6 @@
 </script>
 
 <style lang="postcss">
-  .character-name {
-    display: inline-block;
-    padding-left: 1rem;
-  }
-
   p {
     margin: 0;
   }

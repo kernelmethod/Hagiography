@@ -53,10 +53,6 @@
     margin-bottom: 2em;
   }
 
-  .build-summary .col {
-    padding: 0 1em 0 1em;
-  }
-
   .build-summary-header {
     display: flex;
     align-items: center;
