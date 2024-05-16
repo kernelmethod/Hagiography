@@ -1,8 +1,7 @@
 <script>
-  export let id;
-
   let visible = false;
   let modal;
+  const id = crypto.randomUUID();
 
   export const show = () => (visible = true);
   export const hide = () => modal.close();
@@ -18,12 +17,12 @@
     width: var(--width, 500px);
   }
 
-  dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.7);
+  dialog[open] {
+    animation: zoom 0.3s ease-out;
   }
 
-  dialog[open] {
-    animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
   }
 
   dialog[open]::backdrop {

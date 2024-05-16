@@ -127,6 +127,11 @@
     color: var(--qudcolor-c);
   }
 
+  nav a {
+    color: var(--qudcolor-c);
+    text-decoration: none;
+  }
+
   .nav-item {
     @import 'flex';
   }
@@ -213,7 +218,7 @@
 </div>
 
 <!-- Login modal -->
-<Modal id="loginModal" bind:this={loginModal}>
+<Modal bind:this={loginModal}>
   <span slot="modalHeader">
     Login to Hagiography
   </span>
@@ -276,7 +281,7 @@
 </Modal>
 
 <!-- Signup modal -->
-<Modal id="signupModal">
+<Modal>
   <span slot="modalHeader">
     Sign up for Hagiography
   </span>
@@ -306,7 +311,7 @@
 </Modal>
 
 <!-- Forgot password modal -->
-<Modal id="forgotPasswordModal">
+<Modal>
   <span slot="modalHeader">
     Reset password
   </span>
@@ -337,7 +342,7 @@
 </Modal>
 
 <!-- Logout modal -->
-<Modal id="logoutModal" bind:this={logoutModal}>
+<Modal bind:this={logoutModal}>
   <span slot="modalHeader">
     Logout
   </span>
@@ -364,7 +369,7 @@
 </Modal>
 
 <!-- Settings modal -->
-<Modal id="settingsModal" bind:this={settingsModal}>
+<Modal bind:this={settingsModal}>
   <span slot="modalHeader">
     Settings
   </span>

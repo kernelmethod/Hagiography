@@ -148,7 +148,7 @@
 </main>
 
 {#if record !== null}
-<Modal id="buildCodeModal" bind:this={buildCodeModal} --width="max(60vw, 500px)">
+<Modal bind:this={buildCodeModal} --width="max(60vw, 500px)">
   <div slot="modalHeader">
     Build code
   </div>

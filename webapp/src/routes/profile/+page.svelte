@@ -51,7 +51,7 @@
   {/if}
 </main>
 
-<Modal id="generateApiKeyModal" bind:this={generateApiKeyModal} --width="var(--wide-modal-width)">
+<Modal bind:this={generateApiKeyModal} --width="var(--wide-modal-width)">
   <span slot="modalHeader">
     API key
   </span>

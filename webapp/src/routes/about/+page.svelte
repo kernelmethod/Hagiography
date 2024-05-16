@@ -3,14 +3,12 @@
 </script>
 
 <main>
-  <h2>
-    <b>About Hagiography</b>
+  <h2 class="font-bold text-3xl py-2">
+    About Hagiography
   </h2>
 
-  <h3>
-    <Anchor name="contact">
-      <b>Contact</b>
-    </Anchor>
+  <h3 class="font-bold text-2xl py-2">
+    <Anchor name="contact">Contact</Anchor>
   </h3>
 
   <p>
@@ -22,7 +20,7 @@
     You can also submit bugs through Hagiography's issue tracker.
   </p>
 
-  <h3><b>About the game</b></h3>
+  <h3 class="font-bold text-2xl py-2">About the game</h3>
 
   <p>
     Caves of Qud is a retrofuturistic sci-fi roguelike game; you can learn more

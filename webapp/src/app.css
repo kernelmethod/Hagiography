@@ -6,3 +6,12 @@ html {
     font-family: var(--console-font-family);
     color: var(--qudcolor-y);
 }
+
+a {
+    color: var(--qudcolor-c);
+    text-decoration: underline;
+}
+
+a:visited {
+    color: var(--qudcolor-B);
+}
