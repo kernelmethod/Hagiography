@@ -8,7 +8,7 @@
     <HeroIcon --height="128px" />
   </div>
   <div class="flex justify-center">
-    <h1 class="text-3xl underline">
+    <h1 class="text-3xl underline text-center">
       Welcome to <b>Hagiography</b>!
     </h1>
   </div>

@@ -45,7 +45,7 @@
     Profile for <b>{$userInfo.username}</b>
   </h1>
 
-  <button type="button" class="btn btn-primary" on:click={() => generateApiKeyPromise = generateApiKey()}>
+  <button type="button" on:click={() => generateApiKeyPromise = generateApiKey()}>
     Generate API key
   </button>
   {/if}

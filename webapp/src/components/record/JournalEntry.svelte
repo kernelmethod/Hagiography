@@ -27,13 +27,8 @@
   }
 
   button {
-    font-size: var(--bs-body-font-size);
     width: 100%;
     text-align: left;
-  }
-
-  button:hover {
-    background-color: var(--highlight-color);
   }
 </style>
 
@@ -42,7 +37,7 @@
     <button
       aria-label="Expand entry"
       aria-controls={(journalEntryModal !== null) ? journalEntryModal.id : undefined}
-      class="p-2 rounded-sm flex flex-row"
+      class="p-2 rounded-sm flex flex-row hover:bg-emerald-900"
       on:click={show}>
 
       <span class="entry-prefix">$</span>

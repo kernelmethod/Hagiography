@@ -40,7 +40,7 @@
   }
 
   th, td {
-    padding-left: 3em;
+    padding-left: 1em;
   }
 
   td {
@@ -74,8 +74,8 @@
       <tr>
         <th scope="col">Game mode</th>
         <th scope="col">Character</th>
-        <th scope="col">Score</th>
-        <th scope="col">Turns</th>
+        <th class="hidden lg:table-cell" scope="col">Score</th>
+        <th class="hidden lg:table-cell" scope="col">Turns</th>
         <th scope="col">Uploaded</th>
       </tr>
     </thead>
@@ -103,15 +103,19 @@
       <tr on:click={() => visitRecord(r)} class="record">
         <td>{r.game_mode}</td>
         <td>
-          <div class="character-name">
-            <GameTileFromString --height="var(--base-font-size)" spec="{r.tile}" showBackground={false} />
-            <span class="d-inline-block text-truncate">
-              <ColorizedText text="{r.character_name}" />
-            </span>
+          <div class="flex flex-row">
+            <div>
+              <GameTileFromString --height="var(--base-font-size)" spec="{r.tile}" showBackground={false} />
+            </div>
+            <div class="character-name text-wrap">
+              <span class="d-inline-block text-truncate">
+                <ColorizedText text="{r.character_name}" />
+              </span>
+            </div>
           </div>
         </td>
-        <td>{r.score}</td>
-        <td>{r.turns}</td>
+        <td class="hidden lg:table-cell">{r.score}</td>
+        <td class="hidden lg:table-cell">{r.turns}</td>
         <td><DateTime timestamp="{r.created}" /></td>
       </tr>
       {/each}

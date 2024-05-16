@@ -16,7 +16,7 @@
     background-color: var(--bg-color);
     color: var(--qudcolor-y);
     border-color: var(--qudcolor-y);
-    width: var(--width, 500px);
+    width: var(--width, min(80%, 500px));
   }
 
   dialog[open] {

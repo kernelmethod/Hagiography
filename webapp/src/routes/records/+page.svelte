@@ -74,12 +74,12 @@
   {/if}
   {#if recordPromise !== null}
   {#await recordPromise then}
-  <div class="flex flex-row mb-4">
-    <div>
+  <div class="flex flex-col max-lg:justify-center lg:flex-row mb-4">
+    <div class="flex flex-row justify-center">
       <GameTileFromString --height="128px" spec="{record.tile}" showBackground={false} />
     </div>
     <div>
-      <div class="flex flex-col justify-center items-center text-5xl font-bold ml-8" style="height: 100%;">
+      <div class="flex flex-col justify-center items-center text-3xl font-bold ml-8 lg:text-5xl" style="height: 100%;">
         <ColorizedText text="{record.character_name}" />
       </div>
     </div>

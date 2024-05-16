@@ -78,5 +78,5 @@
   height=120
   class:opacity-0={snapshotPromise === null}
   class:opacity-100={snapshotPromise !== null}
-  class="min-w-96 h-full p-2 block border-2 border-dotted transition-opacity duration-500">
+  class="w-64 md:w-96 h-full p-2 block border-2 border-dotted transition-opacity duration-500">
 </canvas>

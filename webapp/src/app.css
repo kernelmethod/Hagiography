@@ -15,3 +15,8 @@ a {
 a:visited {
     color: var(--qudcolor-B);
 }
+
+/* Colors */
+.border-qudcolor-K {
+    border-color: var(--qudcolor-K);
+}
