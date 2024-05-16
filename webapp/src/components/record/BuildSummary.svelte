@@ -5,10 +5,14 @@
   import { onMount } from 'svelte';
 
   import BuildSummaryInternalHeader from '$components/record/BuildSummaryInternalHeader.svelte';
+  import ClipboardWidget from '$components/ClipboardWidget.svelte';
   import ColorizedText from '$components/ColorizedText.svelte';
   import GameTile from '$components/GameTile.svelte';
+  import Modal from '$components/Modal.svelte';
 
   export let buildCode;
+
+  let buildCodeModal = null;
 
   let cyberneticsModule = null;
   let mutationsModule = null;
@@ -85,7 +89,7 @@
     </div>
 
     <!-- Caste/calling -->
-    <div class="max-lg:row-start-1 max-lg:col-span-2 max-lg:border-0">
+    <div class="max-lg:row-start-1 max-lg:col-span-2 max-lg:border-0 max-lg:mb-8">
       {#if subtypeModule !== null}
       {#if subtype !== null}
       <div class="flex justify-center subtype-tile">
@@ -97,6 +101,13 @@
       <div class="text-center">
         <p>{subtypeModule.data.Subtype}</p>
         <p>{#if cyberneticsModule !== null}True Kin{:else}Mutated Human{/if}</p>
+        {#if buildCodeModal !== null}
+        <p>
+          <button type="button" class="px-2 hover:bg-emerald-900 rounded-md" on:click={() => buildCodeModal.show()}>
+            <i class="bi-clipboard"></i> Show build code
+          </button>
+        </p>
+        {/if}
       </div>
       {:else}
       <p class="text-error">Error: could not find XRL.CharacterBuilds.Qud.QudSubtypeModule</p>
@@ -138,3 +149,15 @@
 </div>
 {/await}
 {/if}
+
+<Modal bind:this={buildCodeModal} --width="max(60vw, 500px)">
+  <div slot="modalHeader">
+    Build code
+  </div>
+
+  <div slot="modalBody">
+    <ClipboardWidget>
+      {buildCode}
+    </ClipboardWidget>
+  </div>
+</Modal>

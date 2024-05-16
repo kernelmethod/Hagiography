@@ -107,14 +107,6 @@
   {/if}
   {/if}
 
-  {#if buildCodeModal !== null}
-  <p>
-    <button type="button" class="btn btn-primary" on:click={() => buildCodeModal.show()}>
-      Show build code
-    </button>
-  </p>
-  {/if}
-
   <!-- Journal entries -->
 
   {#await journalPromise}
@@ -141,17 +133,3 @@
   {/await}
   {/if}
 </main>
-
-{#if record !== null}
-<Modal bind:this={buildCodeModal} --width="max(60vw, 500px)">
-  <div slot="modalHeader">
-    Build code
-  </div>
-
-  <div slot="modalBody">
-    <ClipboardWidget>
-      {record.build_code}
-    </ClipboardWidget>
-  </div>
-</Modal>
-{/if}
